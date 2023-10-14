@@ -1,6 +1,10 @@
 fileFormatVersion: 2
+<<<<<<< Updated upstream:Assets/Matrials.meta
 guid: 0f87d5e260467fc468f1693ec117710e
 folderAsset: yes
+=======
+guid: df4921fc049a79b4799ae6fdb36539d6
+>>>>>>> Stashed changes:Assets/Scenes/bing_bing.unity.meta
 DefaultImporter:
   externalObjects: {}
   userData: 
