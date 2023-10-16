@@ -4,19 +4,21 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using TMPro.EditorUtilities;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 public class Condition {
-    public bool isAbility;
-    public bool isHeat;
-    public bool isDead;
+    public List<bool> isAbility     = new List<bool>();
+    public List<bool> isHeat        = new List<bool>();
+    public List<bool> isDead        = new List<bool>();
     public List<GameObject> animals = new List<GameObject>();
 
     public Condition(bool _isAbility, bool _isHeat, bool _isDead, GameObject _animal) { 
-        isAbility = _isAbility; // 능력이 사용 가능한 상태인지
-        isHeat = _isHeat; // 공격을 받았을 때
-        isDead = _isDead; // 죽은 상태인지
+        isAbility.Add(_isAbility); // 능력이 사용 가능한 상태인지
+        isHeat.Add(_isHeat); // 공격을 받았을 때
+        isDead.Add(_isDead); // 죽은 상태인지
         animals.Add(_animal); // 동일한 ID의 오브젝트가 들어왔을 때
     }
 
@@ -33,30 +35,30 @@ public class Condition {
 
     public bool isAbilityReturn()
     {
-        return isAbility;
+        return isAbility[0];
     }
 
     public bool isHeatReturn()
     {
-        return isHeat;
+        return isHeat[0];
     }
 
     public bool isDeadReturn()
     {
-        return isDead;
+        return isDead[0];
     }
 }
 
 public class mainFight : MonoBehaviour
 {
     //------------------------Unit Condition & ID Input---------------------------//
-    Dictionary <int, Condition> unitCondition = new Dictionary<int, Condition>();
+    Dictionary <float, Condition> unitCondition = new Dictionary<float, Condition>();
     public player Player;
     public enemy Enemy;
     public GameObject[] playerUnit = new GameObject[5];
     public GameObject[] enemyUnit  = new GameObject[5];
-    public int[] playerUnitID      = new int[5];
-    public int[] enemyUnitID       = new int[5];
+    public float[] playerUnitID      = new float[5];
+    public float[] enemyUnitID       = new float[5];
 
     //----------------------------Unit Spawn & UI---------------------------------//
     public Transform[] playerSpawn;
@@ -111,34 +113,52 @@ public class mainFight : MonoBehaviour
     }
 
     // 유닛 아이디를 받아서 저장하는 역할
-    void InputDictionary(int unitCount, GameObject addAnimal) {
+    void InputDictionary(int unitCount, GameObject addAnimal, float idValue) {
         if (addAnimal.GetComponent<animalID>().UnitID < 1000)
         {
-            playerUnitID[unitCount] = playerUnit[unitCount].GetComponent<animalID>().UnitID;
+            Debug.Log(idValue);
+            playerUnitID[unitCount] = playerUnit[unitCount].GetComponent<animalID>().UnitID + idValue;
 
-            // 초기 ID 값에 의거해 현재 상태를 넣어줌
-            if (playerUnitID[unitCount] <= 10)
+            if (!(unitCondition.ContainsKey(playerUnitID[unitCount])))
             {
-                unitCondition.Add(playerUnitID[unitCount], new Condition(true, false, false, addAnimal));
+                // 초기 ID 값에 의거해 현재 상태를 넣어줌
+                if (playerUnitID[unitCount] <= 10)
+                {
+                    unitCondition.Add((playerUnitID[unitCount]), new Condition(true, false, false, addAnimal));
+                }
+                else
+                {
+                    unitCondition.Add((playerUnitID[unitCount]), new Condition(false, false, false, addAnimal));
+                }
             }
             else
             {
-                unitCondition.Add(playerUnitID[unitCount], new Condition(false, false, false, addAnimal));
+                Debug.Log("중복입니다.");
+                InputDictionary(unitCount, addAnimal, idValue + 0.1f);
             }
         }
 
         else if (addAnimal.GetComponent<animalID>().UnitID > 1000)
         {
-            enemyUnitID[unitCount] = enemyUnit[unitCount].GetComponent<animalID>().UnitID;
+            Debug.Log(idValue);
+            enemyUnitID[unitCount] = enemyUnit[unitCount].GetComponent<animalID>().UnitID + idValue;
 
-            if (enemyUnitID[unitCount] <= 1010)
+            if (!(unitCondition.ContainsKey(enemyUnitID[unitCount])))
             {
-                unitCondition.Add(enemyUnitID[unitCount], new Condition(true, false, false, addAnimal));
-                // unitCondition[enemyUnitID[unitCount]].Show(); // 값이 잘 들어가있는지 테스트
+                if (enemyUnitID[unitCount] <= 1010)
+                {
+                    unitCondition.Add((enemyUnitID[unitCount]), new Condition(true, false, false, addAnimal));
+                    // unitCondition[enemyUnitID[unitCount]].Show(); // 값이 잘 들어가있는지 테스트
+                }
+                else
+                {
+                    unitCondition.Add((enemyUnitID[unitCount]), new Condition(false, false, false, addAnimal));
+                }
             }
             else
             {
-                unitCondition.Add(enemyUnitID[unitCount], new Condition(false, false, false, addAnimal));
+                Debug.Log("중복입니다.");
+                InputDictionary(unitCount, addAnimal, (idValue + 0.1f));
             }
         }
     }
@@ -151,7 +171,7 @@ public class mainFight : MonoBehaviour
             if (playerUnit[i] != null) {
                 GameObject addAnimal = Instantiate(playerUnit[i], playerSpawn[i + 1].position, Quaternion.Euler(0, 90, 0));
                 addAnimal.transform.parent = playerBox.transform;
-                InputDictionary(i, addAnimal);
+                InputDictionary(i, addAnimal,0);
                 // UI Condition 소환
                 GameObject setCondition = Instantiate(UnitConditionUi, playerUiSpawn[i + 1].transform.position, Quaternion.identity, playerUiBox.transform);
                 setCondition.transform.Find("heart").transform.Find("HP").GetComponent<Text>().text  = "" + playerUnit[i].GetComponent<animalID>().Heart;
@@ -161,7 +181,7 @@ public class mainFight : MonoBehaviour
             if (enemyUnit[i] != null) {
                 GameObject addAnimal = Instantiate(enemyUnit[i], enemySpawn[i + 1].position, Quaternion.Euler(0, 90 * -1, 0));
                 addAnimal.transform.parent = enemyBox.transform;
-                InputDictionary(i, addAnimal);
+                InputDictionary(i, addAnimal,0);
                 // UI Condition 소환
                 GameObject setCondition = Instantiate(UnitConditionUi, enemyUiSpawn[i + 1].transform.position, Quaternion.identity, enemyUiBox.transform);
                 setCondition.transform.Find("heart").transform.Find("HP").GetComponent<Text>().text  = "" + enemyUnit[i].GetComponent<animalID>().Heart;
@@ -172,11 +192,12 @@ public class mainFight : MonoBehaviour
 
     void UnitAttackStart()
     {
+        //--------------------전투 실시---------------------//
         Condition playerCondition = unitCondition[playerUnitID[playerUnitCount]];
         Condition enemyCondition = unitCondition[enemyUnitID[enemyUnitCount]];
 
-        playerCondition.UnitReturn().transform.DOMoveX(-0.5f, fightSpeed).SetEase(Ease.OutQuint);
-        enemyCondition.UnitReturn().transform.DOMoveX(0.5f, fightSpeed).SetEase(Ease.OutQuint);
+        playerCondition.UnitReturn().transform.DOMoveX(-0.4f, fightSpeed).SetEase(Ease.OutQuint);
+        enemyCondition.UnitReturn().transform.DOMoveX(0.4f, fightSpeed).SetEase(Ease.OutQuint);
 
         playerCondition.UnitReturn().GetComponent<Animator>().SetTrigger("isAttack");
         enemyCondition.UnitReturn().GetComponent<Animator>().SetTrigger("isAttack");
@@ -193,46 +214,102 @@ public class mainFight : MonoBehaviour
         if(playerID.Heart <= 0)
         {
             Debug.Log("player Dead");
-            playerCondition.isDead = true;
-            playerCondition.isHeat = true;
+            playerCondition.isDead[0] = true;
+            playerCondition.isHeat[0] = true;
+            StartCoroutine(StartAttackAnim(playerCondition.UnitReturn(), 2));
             Debug.Log("player heat : " + playerCondition.isHeat);
             Debug.Log("player dead : " + playerCondition.isDead);
         }
         else
         {
             Debug.Log("player Heat");
-            playerCondition.isHeat = true;
+            playerCondition.isHeat[0] = true;
+            StartCoroutine(StartAttackAnim(playerCondition.UnitReturn(), 0)); // 0 player
         }
 
         if(enmeyID.Heart <= 0)
         {
             Debug.Log("enemy Dead");
-            enemyCondition.isDead = true;
-            enemyCondition.isHeat = true;
+            enemyCondition.isDead[0] = true;
+            enemyCondition.isHeat[0] = true;
+            StartCoroutine(StartAttackAnim(enemyCondition.UnitReturn(), 3));
         }
         else
         {
             Debug.Log("enemy Heat");
-            enemyCondition.isHeat = true;
+            enemyCondition.isHeat[0] = true;
+            StartCoroutine(StartAttackAnim(enemyCondition.UnitReturn(), 1)); // 1 enemy
             Debug.Log("enemy heat : " + enemyCondition.isHeat);
             Debug.Log("enemy dead : " + enemyCondition.isDead);
         }
-
-        StartCoroutine(StartAttackAnim(playerCondition.UnitReturn(), 0));
-        StartCoroutine(StartAttackAnim(enemyCondition.UnitReturn(), 1));
+        //--------------------전투 종료---------------------//
     }
 
-    IEnumerator StartAttackAnim(GameObject animalObj, int checkNum) // checkNum 0 == player, 1 == enemy
+    void ControllConditionGame(int checkNum) // 0 player , 1 enemy
     {
+        //------------컨디션 확인 후 결투 설정-------------//
+        // 죽은 유닛 밀어내고 position 변경
+        if (unitCondition[playerUnitID[playerUnitCount]].isDead[0] && checkNum == 0)
+        {
+            playerBox.transform.DOMoveX(playerUnitCount, 1f).SetEase(Ease.OutSine);
+            playerUiBox.GetComponent<RectTransform>().DOAnchorPosX(75 * playerUnitCount, 1f).SetEase(Ease.OutSine);
+        }
+
+        if(unitCondition[enemyUnitID[enemyUnitCount]].isDead[0] && checkNum == 1)
+        {
+            enemyBox.transform.DOMoveX(-1*enemyUnitCount, 1f).SetEase(Ease.OutSine);
+            enemyUiBox.GetComponent<RectTransform>().DOAnchorPosX(-75 * enemyUnitCount, 1f).SetEase(Ease.OutSine);
+        }
+
+        //--------isHeat & isDead 확인 후 능력 사용-------//
+        //------------------------------------------------//
+        if (unitCondition[playerUnitID[playerUnitCount]].isDead[0] && checkNum == 0)
+        {
+            unitCondition[playerUnitID[playerUnitCount]].isHeat.RemoveAt(0);
+            unitCondition[playerUnitID[playerUnitCount]].isDead.RemoveAt(0);
+            unitCondition[playerUnitID[playerUnitCount]].animals.RemoveAt(0);
+            ++playerUnitCount;
+        }
+
+        if (unitCondition[enemyUnitID[enemyUnitCount]].isDead[0] && checkNum == 1)
+        {
+            unitCondition[enemyUnitID[enemyUnitCount]].isHeat.RemoveAt(0);
+            unitCondition[enemyUnitID[enemyUnitCount]].isDead.RemoveAt(0);
+            unitCondition[enemyUnitID[enemyUnitCount]].animals.RemoveAt(0);
+            ++enemyUnitCount;
+        }
+    }
+
+    IEnumerator StartAttackAnim(GameObject animalObj, int checkNum) // checkNum 0 == player, 1 == enemy, 2 == playerDestroy, 3 == enemyDestroy
+    {
+        yield return new WaitForSeconds(0.01f); // 딜레이
         yield return new WaitForSeconds(animalObj.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length);
         
         if(checkNum == 0)
         {
             animalObj.transform.DOMoveX(-1, fightSpeed).SetEase(Ease.OutQuint);
         }
-        else
+        else if(checkNum == 1)
         {
             animalObj.transform.DOMoveX(1, fightSpeed).SetEase(Ease.OutQuint);
+        }
+        else if(checkNum == 2)
+        {
+            animalObj.GetComponent<Animator>().SetTrigger("isDead");
+            yield return new WaitForSeconds(0.01f);
+            yield return new WaitForSeconds(animalObj.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length);
+            Destroy(animalObj);
+            playerUiBox.transform.GetChild(playerUnitCount).gameObject.SetActive(false);
+            ControllConditionGame(0);
+        }
+        else if(checkNum == 3)
+        {
+            animalObj.GetComponent<Animator>().SetTrigger("isDead");
+            yield return new WaitForSeconds(0.01f);
+            yield return new WaitForSeconds(animalObj.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length);
+            Destroy(animalObj);
+            enemyUiBox.transform.GetChild(enemyUnitCount).gameObject.SetActive(false);
+            ControllConditionGame(1);
         }
     }
 }
