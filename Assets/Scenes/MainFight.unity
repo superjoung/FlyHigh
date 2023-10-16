@@ -310,8 +310,18 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  playerUnitID: 0000000000000000000000000000000000000000
-  enemyUnitID: 0000000000000000000000000000000000000000
+  playerUnitID:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  enemyUnitID:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
   playerSpawn:
   - {fileID: 0}
   - {fileID: 0}
