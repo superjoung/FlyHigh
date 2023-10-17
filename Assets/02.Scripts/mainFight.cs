@@ -71,30 +71,37 @@ public class mainFight : MonoBehaviour
     public int playerUnitCount = 0; // player unit들이 죽었을 경우 1씩 증가한다. 지금 뭘 움직여 싸워야하는지 구분할 때 사용
     public int enemyUnitCount  = 0; // enemy unit들이 죽었을 경우 1씩 증가한다. 지금 뭘 움직여 싸워야하는지 구분할 때 사용
     public float fightSpeed; // unit끼리 싸우는 속도를 조절. 값이 낮을 수록 빨리 전투합니다.
+    public GameObject playerWinPanel;
+    public GameObject enemyWinPanel;
 
     private void Start()
     {
         // 카메라 투영 방식을 2D 형식으로 변환
         Camera.main.orthographic = true;
         //------------------find correct obj into values----------------------//
-        Enemy         = GameObject.Find("Enemy1").GetComponent<enemy>(); // 대화하는 대상 오브젝트의 enemy를 넣어주면 됩니다.
-        Player        = GameObject.Find("Player").GetComponent<player>();
+        Enemy          = GameObject.Find("Enemy1").GetComponent<enemy>(); // 대화하는 대상 오브젝트의 enemy를 넣어주면 됩니다.
+        Player         = GameObject.Find("Player").GetComponent<player>();
 
-        playerBox     = GameObject.Find("PlayerAnimals");
-        enemyBox      = GameObject.Find("EnemyAnimals");
+        playerBox      = GameObject.Find("PlayerAnimals");
+        enemyBox       = GameObject.Find("EnemyAnimals");
 
-        playerUiBox   = GameObject.Find("PlayerUiBox");
-        enemyUiBox    = GameObject.Find("EnemyUiBox");
+        playerUiBox    = GameObject.Find("PlayerUiBox");
+        enemyUiBox     = GameObject.Find("EnemyUiBox");
 
-        playerUnit    = (GameObject[])Player.palyerUnit.Clone();
-        enemyUnit     = (GameObject[])Enemy.enemyUnit.Clone();
+        playerUnit     = (GameObject[])Player.palyerUnit.Clone();
+        enemyUnit      = (GameObject[])Enemy.enemyUnit.Clone();
+
+        playerWinPanel = GameObject.Find("PlayerWinPanel");
+        playerWinPanel.SetActive(false); // active -> false  / can't see this panel
+        enemyWinPanel  = GameObject.Find("EnemyWinPanel");
+        enemyWinPanel.SetActive(false); // active -> false  / can't see this panel
 
         // 1 ~ 6까지 Transform 불러와서 사용할 것. 0은 담고있는 부모오브젝트 저장
-        playerSpawn   = GameObject.Find("PlayerSpawnPoint").GetComponentsInChildren<Transform>();
-        enemySpawn    = GameObject.Find("EnemySpawnPoint").GetComponentsInChildren<Transform>();
+        playerSpawn    = GameObject.Find("PlayerSpawnPoint").GetComponentsInChildren<Transform>();
+        enemySpawn     = GameObject.Find("EnemySpawnPoint").GetComponentsInChildren<Transform>();
 
-        playerUiSpawn = GameObject.Find("PlayerUiPosition").GetComponentsInChildren<RectTransform>();
-        enemyUiSpawn  = GameObject.Find("EnemyUiPosition").GetComponentsInChildren<RectTransform>();
+        playerUiSpawn  = GameObject.Find("PlayerUiPosition").GetComponentsInChildren<RectTransform>();
+        enemyUiSpawn   = GameObject.Find("EnemyUiPosition").GetComponentsInChildren<RectTransform>();
         
         // ID 분리, dictionary에 저장
         SpawnUnit();
@@ -291,11 +298,11 @@ public class mainFight : MonoBehaviour
     {
         if(playerUnitCount == 5) // player진형 패배 두 진형 동시에 기절했을 경우 패배로 처리
         {
-
+            enemyWinPanel.SetActive(true);
         }
         else if(enemyUnitCount == 5) // enemy진형 패배
         {
-
+            playerWinPanel.SetActive(true);
         }
     }
 
