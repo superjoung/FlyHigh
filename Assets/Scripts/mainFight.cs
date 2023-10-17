@@ -132,7 +132,6 @@ public class mainFight : MonoBehaviour
             }
             else
             {
-                Debug.Log("중복입니다.");
                 // 중복일 경우 idValue 값 0.1증가 시켜주고 재귀
                 InputDictionary(unitCount, addAnimal, idValue + 0.1f);
             }
@@ -156,7 +155,6 @@ public class mainFight : MonoBehaviour
             }
             else
             {
-                Debug.Log("중복입니다.");
                 InputDictionary(unitCount, addAnimal, idValue + 0.1f);
             }
         }
@@ -223,17 +221,13 @@ public class mainFight : MonoBehaviour
         // player Unit이 기절했을 때
         if(playerID.Heart <= 0)
         {
-            Debug.Log("player Dead");
             playerCondition.isDead[0] = true;
             playerCondition.isHeat[0] = true;
             StartCoroutine(StartAttackAnim(playerCondition.UnitReturn(), 2));
-            Debug.Log("player heat : " + playerCondition.isHeat);
-            Debug.Log("player dead : " + playerCondition.isDead);
         }
         // player Unit이 기절을 안하고 타격 받았을 때
         else
         {
-            Debug.Log("player Heat");
             playerCondition.isHeat[0] = true;
             StartCoroutine(StartAttackAnim(playerCondition.UnitReturn(), 0)); // 0 player
         }
@@ -241,7 +235,6 @@ public class mainFight : MonoBehaviour
         // enemy Unit이 기절했을 때
         if(enmeyID.Heart <= 0)
         {
-            Debug.Log("enemy Dead");
             enemyCondition.isDead[0] = true;
             enemyCondition.isHeat[0] = true;
             StartCoroutine(StartAttackAnim(enemyCondition.UnitReturn(), 3));
@@ -249,11 +242,8 @@ public class mainFight : MonoBehaviour
         // enemy Unit이 기절을 안하고 타격 받았을 때
         else
         {
-            Debug.Log("enemy Heat");
             enemyCondition.isHeat[0] = true;
             StartCoroutine(StartAttackAnim(enemyCondition.UnitReturn(), 1)); // 1 enemy
-            Debug.Log("enemy heat : " + enemyCondition.isHeat);
-            Debug.Log("enemy dead : " + enemyCondition.isDead);
         }
         //--------------------전투 종료---------------------//
     }
@@ -264,14 +254,14 @@ public class mainFight : MonoBehaviour
         // 죽은 유닛 밀어내고 position 변경
         if (unitCondition[playerUnitID[playerUnitCount]].isDead[0] && checkNum == 0)
         {
-            playerBox.transform.DOMoveX(playerUnitCount, 1f).SetEase(Ease.OutSine);
-            playerUiBox.GetComponent<RectTransform>().DOAnchorPosX(75 * playerUnitCount, 1f).SetEase(Ease.OutSine);
+            playerBox.transform.DOMoveX(playerUnitCount, fightSpeed).SetEase(Ease.OutSine);
+            playerUiBox.GetComponent<RectTransform>().DOAnchorPosX(75 * playerUnitCount, fightSpeed).SetEase(Ease.OutSine);
         }
 
         if(unitCondition[enemyUnitID[enemyUnitCount]].isDead[0] && checkNum == 1)
         {
-            enemyBox.transform.DOMoveX(-1*enemyUnitCount, 1f).SetEase(Ease.OutSine);
-            enemyUiBox.GetComponent<RectTransform>().DOAnchorPosX(-75 * enemyUnitCount, 1f).SetEase(Ease.OutSine);
+            enemyBox.transform.DOMoveX(-1*enemyUnitCount, fightSpeed).SetEase(Ease.OutSine);
+            enemyUiBox.GetComponent<RectTransform>().DOAnchorPosX(-75 * enemyUnitCount, fightSpeed).SetEase(Ease.OutSine);
         }
 
         //--------isHeat & isDead 확인 후 능력 사용-------//
@@ -292,7 +282,21 @@ public class mainFight : MonoBehaviour
             ++enemyUnitCount;
         }
         currentTurn++;
+        EndFightCheck();
         Debug.Log("지금 턴은 : " + currentTurn);
+    }
+
+    // 사운드 및 Panel처리
+    void EndFightCheck()
+    {
+        if(playerUnitCount == 5) // player진형 패배 두 진형 동시에 기절했을 경우 패배로 처리
+        {
+
+        }
+        else if(enemyUnitCount == 5) // enemy진형 패배
+        {
+
+        }
     }
 
     IEnumerator StartAttackAnim(GameObject animalObj, int checkNum) // checkNum 0 == player, 1 == enemy, 2 == playerDestroy, 3 == enemyDestroy
