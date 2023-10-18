@@ -50,8 +50,8 @@ public class mainFight : MonoBehaviour
     Dictionary <float, Condition> unitCondition = new Dictionary<float, Condition>(); // 공격 받았는지, 능력사용 가능한지, 죽었는지, 해당 오브젝트를 Key값으로 찾아 사용
     public player Player;
     public enemy Enemy;
-    public GameObject[] playerUnit = new GameObject[5]; // player 스크립트에서 unit 복사
-    public GameObject[] enemyUnit  = new GameObject[5]; // enemy 스크립트에서 unit 복사
+    public GameObject[] playerUnit   = new GameObject[5]; // player 스크립트에서 unit 복사
+    public GameObject[] enemyUnit    = new GameObject[5]; // enemy 스크립트에서 unit 복사
     public float[] playerUnitID      = new float[5]; // player unit id 에서 id만 뽑아서 배열 저장
     public float[] enemyUnitID       = new float[5]; // enemy unit id 에서 id만 뽑아서 배열 저장
 
@@ -70,9 +70,17 @@ public class mainFight : MonoBehaviour
     public int currentTurn     = 0; // 진행한 turn 수, unit끼리 한번씩 부딪치면 1턴으로 간주한다.
     public int playerUnitCount = 0; // player unit들이 죽었을 경우 1씩 증가한다. 지금 뭘 움직여 싸워야하는지 구분할 때 사용
     public int enemyUnitCount  = 0; // enemy unit들이 죽었을 경우 1씩 증가한다. 지금 뭘 움직여 싸워야하는지 구분할 때 사용
+    public int playerUnitRemain;
+    public int enemyUnitRemain;
     public float fightSpeed; // unit끼리 싸우는 속도를 조절. 값이 낮을 수록 빨리 전투합니다.
     public GameObject playerWinPanel;
     public GameObject enemyWinPanel;
+
+    //-------------------------------Ability value--------------------------------//
+    public int playerUseAbility  = 0; // player 능력 사용 카운트
+    public int enemyUseAbility   = 0; // enemy 능력 사용 카운트
+    public int playerAttackCount = 0; // player Attack 동일 한 유닛이 공격할 때만 카운트 증가
+    public int enemyAttackCount  = 0; // enemy Attack 동일 한 유닛이 공격할 때만 카운트 증가
 
     private void Start()
     {
@@ -183,6 +191,7 @@ public class mainFight : MonoBehaviour
                 // text 설정 작업
                 setCondition.transform.Find("heart").transform.Find("HP").GetComponent<Text>().text  = "" + playerUnit[i].GetComponent<animalID>().Heart;
                 setCondition.transform.Find("attack").transform.Find("AT").GetComponent<Text>().text = "" + playerUnit[i].GetComponent<animalID>().Attack;
+                playerUnitRemain++;
             }
 
             // 위 코드와 일맥상통.
@@ -194,6 +203,7 @@ public class mainFight : MonoBehaviour
                 GameObject setCondition = Instantiate(UnitConditionUi, enemyUiSpawn[i + 1].transform.position, Quaternion.identity, enemyUiBox.transform);
                 setCondition.transform.Find("heart").transform.Find("HP").GetComponent<Text>().text  = "" + enemyUnit[i].GetComponent<animalID>().Heart;
                 setCondition.transform.Find("attack").transform.Find("AT").GetComponent<Text>().text = "" + enemyUnit[i].GetComponent<animalID>().Attack;
+                enemyUnitRemain++;            
             }
         }
     }
@@ -228,30 +238,42 @@ public class mainFight : MonoBehaviour
         // player Unit이 기절했을 때
         if(playerID.Heart <= 0)
         {
+            playerAttackCount = 0;
             playerCondition.isDead[0] = true;
             playerCondition.isHeat[0] = true;
+            playerUnitRemain--;
+            AbilityUseCheck(playerUnitID[playerUnitCount]);
             StartCoroutine(StartAttackAnim(playerCondition.UnitReturn(), 2));
         }
         // player Unit이 기절을 안하고 타격 받았을 때
         else
         {
+            enemyAttackCount++;
             playerCondition.isHeat[0] = true;
+            AbilityUseCheck(playerUnitID[playerUnitCount]);
             StartCoroutine(StartAttackAnim(playerCondition.UnitReturn(), 0)); // 0 player
         }
 
         // enemy Unit이 기절했을 때
         if(enmeyID.Heart <= 0)
         {
+            enemyAttackCount = 0;
             enemyCondition.isDead[0] = true;
             enemyCondition.isHeat[0] = true;
+            enemyUnitRemain--;
+            AbilityUseCheck(enemyUnitID[enemyUnitCount]);
             StartCoroutine(StartAttackAnim(enemyCondition.UnitReturn(), 3));
         }
         // enemy Unit이 기절을 안하고 타격 받았을 때
         else
         {
+            playerAttackCount++;
             enemyCondition.isHeat[0] = true;
+            AbilityUseCheck(enemyUnitID[enemyUnitCount]);
             StartCoroutine(StartAttackAnim(enemyCondition.UnitReturn(), 1)); // 1 enemy
         }
+        currentTurn++;
+        Debug.Log("지금 턴은 : " + currentTurn);
         //--------------------전투 종료---------------------//
     }
 
@@ -288,21 +310,108 @@ public class mainFight : MonoBehaviour
             unitCondition[enemyUnitID[enemyUnitCount]].animals.RemoveAt(0);
             ++enemyUnitCount;
         }
-        currentTurn++;
         EndFightCheck();
-        Debug.Log("지금 턴은 : " + currentTurn);
     }
 
     // 사운드 및 Panel처리
     void EndFightCheck()
     {
-        if(playerUnitCount == 5) // player진형 패배 두 진형 동시에 기절했을 경우 패배로 처리
+        if(playerUnitRemain == 0) // player진형 패배 두 진형 동시에 기절했을 경우 패배로 처리
         {
             enemyWinPanel.SetActive(true);
         }
-        else if(enemyUnitCount == 5) // enemy진형 패배
+        else if(enemyUnitRemain == 0) // enemy진형 패배
         {
             playerWinPanel.SetActive(true);
+        }
+    }
+
+    // Attack 실시할때마다 함수 실행
+    void AbilityUseCheck(float ID)
+    {   
+        // attack animal field where detective
+        // player
+        if(ID > 0 && ID <= 100) // 현재 공격한 unit의 능력 조건 확인 가능
+        {
+            if(ID > 10 && ID <= 20)
+            {
+                unitCondition[ID].isAbility[0] = true;
+                Debug.Log("Ability Set true : " + ID);
+            }
+            // 외부 unit들 능력 사용 필요 조건 ID 비교
+            for (int current = 0; current < playerUnitID.Length; current++)
+            {
+                float currentID = playerUnitID[current];
+                if (currentID > 0 && currentID <= 10 && playerUnitRemain == 1)
+                {
+                    unitCondition[currentID].isAbility[0] = true;
+                    Debug.Log("Ability Set true : " + currentID);
+                }
+                else if (currentID > 40 && currentID <= 50 && unitCondition[ID].isDead[0] == true)
+                {
+                    if (currentID == 41 && (playerUnitCount == 2 || playerUnitCount == 4))
+                    {
+                        unitCondition[currentID].isAbility[0] = true;
+                        Debug.Log("Ability Set true : " + currentID);
+                    }
+                    else if (currentID == 42 || currentID == 43)
+                    {
+                        unitCondition[currentID].isAbility[0] = true;
+                        Debug.Log("Ability Set true : " + currentID);
+                    }
+                }
+                else if (currentID > 50 && currentID <= 70 && unitCondition[ID].isHeat[0] == true)
+                {
+                    unitCondition[currentID].isAbility[0] = true;
+                    Debug.Log("Ability Set true : " + currentID);
+                }
+                else if(currentID > 80 && currentID <= 90 && enemyAttackCount == 3)
+                {
+                    unitCondition[currentID].isAbility[0] = true;
+                    Debug.Log("Ability Set true : " + currentID);
+                }
+            }
+        }
+        // enemy
+        else if(ID > 1000 && ID <= 1100)
+        {
+            if (ID > 1010 && ID <= 1020)
+            {
+                unitCondition[ID].isAbility[0] = true;
+                Debug.Log("Ability Set true : " + ID);
+            }
+            for (int current = 0; current < enemyUnitID.Length; current++)
+            {
+                float currentID = enemyUnitID[current];
+                if (currentID > 1000 && currentID <= 1010 && enemyUnitRemain == 1)
+                {
+                    unitCondition[currentID].isAbility[0] = true;
+                    Debug.Log("Ability Set true : " + currentID);
+                }
+                else if (currentID > 1040 && currentID <= 1050 && unitCondition[ID].isDead[0] == true)
+                {
+                    if (currentID == 1041 && (enemyUnitCount == 2 || enemyUnitCount == 4))
+                    {
+                        unitCondition[currentID].isAbility[0] = true;
+                        Debug.Log("Ability Set true : " + currentID);
+                    }
+                    else if (currentID == 1042 || currentID == 1043)
+                    {
+                        unitCondition[currentID].isAbility[0] = true;
+                        Debug.Log("Ability Set true : " + currentID);
+                    }
+                }
+                else if (currentID > 1050 && currentID <= 1070 && unitCondition[ID].isHeat[0] == true)
+                {
+                    unitCondition[currentID].isAbility[0] = true;
+                    Debug.Log("Ability Set true : " + currentID);
+                }
+                else if (currentID > 1080 && currentID <= 1090 && playerAttackCount == 3)
+                {
+                    unitCondition[currentID].isAbility[0] = true;
+                    Debug.Log("Ability Set true : " + currentID);
+                }
+            }
         }
     }
 
