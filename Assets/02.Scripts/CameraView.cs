@@ -3,21 +3,30 @@ using UnityEngine;
 public class CameraView : MonoBehaviour
 {
     public Transform playerTransform;
+    
     public float distanceFromPlayer = 5f;
     public float mouseSensitivity = 100f;
 
     private float xRotation = 0f;
     private float yRotation = 0f;
-
+    DialogueManager DM;
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
+        DM = GameObject.Find("manager").GetComponent<DialogueManager>();
     }
 
     private void Update()
     {
-        HandleCameraRotation();
-        UpdateCameraPosition();
+        
+        if (!DM.isInDialogue)
+        {
+            if(Input.GetMouseButton(0))
+                HandleCameraRotation();
+
+            UpdateCameraPosition();
+        }
+            
     }
 
     void HandleCameraRotation()
@@ -31,16 +40,17 @@ public class CameraView : MonoBehaviour
         xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
         transform.rotation = Quaternion.Euler(xRotation, yRotation, 0f);
-        playerTransform.rotation = Quaternion.Euler(0f, yRotation, 0f);
     }
 
     void UpdateCameraPosition()
     {
+
         Vector3 direction = transform.forward;
         direction.y = 0;
         direction.Normalize();
-
         transform.position = playerTransform.position - direction * distanceFromPlayer + Vector3.up * 5f;
+        
     }
 
+    
 }

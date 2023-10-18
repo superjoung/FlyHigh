@@ -9,26 +9,51 @@ public class Eagle : MonoBehaviour
     private Rigidbody rb;
     private Vector3 movement;
     private Animator animator;
-
+    CameraDialogue CD;
+    DialogueManager DM;
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
+        CD = GameObject.Find("Dialogue Camera").GetComponent<CameraDialogue>();
+        DM = GameObject.Find("manager").GetComponent<DialogueManager>();
     }
 
     private void Update()
     {
-        ProcessInput();
-        AnimateCharacter();
+        if (!DM.isInDialogue)
+        {
+            ProcessInput();
+            AnimateCharacter();
+
+            if (!Input.GetMouseButton(0)) // 오른쪽 마우스 버튼을 누르지 않을 때만
+            {
+                RotateCharacterToCameraDirection();
+            }
+        }
+        
+    }
+
+    void RotateCharacterToCameraDirection()
+    {
+        // 캐릭터가 카메라 방향을 바라보게 합니다.
+        Vector3 lookDirection = new Vector3(movement.x, 0f, movement.z);
+        if (lookDirection != Vector3.zero)
+        {
+            Quaternion lookRotation = Quaternion.LookRotation(lookDirection);
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
+        }
     }
 
     private void FixedUpdate()
     {
-        MoveCharacter();
+        if (!DM.isInDialogue)
+            MoveCharacter();
     }
 
     void ProcessInput()
     {
+        
         float moveX = Input.GetAxis("Horizontal");
         float moveZ = Input.GetAxis("Vertical");
 
@@ -60,8 +85,11 @@ public class Eagle : MonoBehaviour
     {
         if (other.CompareTag("Enemy"))
         {
-            dialogueManager.StartDialogue("DialogueManager?");
+            CD.enemyTransform = other.transform;
+            CharacterDialogue character = other.GetComponent<CharacterDialogue>();
+            dialogueManager.StartDialogue(character);
         }
     }
+    
 
 }
