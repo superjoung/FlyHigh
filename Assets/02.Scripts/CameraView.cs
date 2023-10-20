@@ -9,17 +9,16 @@ public class CameraView : MonoBehaviour
 
     private float xRotation = 0f;
     private float yRotation = 0f;
-    DialogueManager DM;
+
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
-        DM = GameObject.Find("manager").GetComponent<DialogueManager>();
     }
 
     private void Update()
     {
         
-        if (!DM.isInDialogue)
+        if (!DialogueManager.isInDialogue && !InventoryUI.isInventory)
         {
             if(Input.GetMouseButton(0))
                 HandleCameraRotation();

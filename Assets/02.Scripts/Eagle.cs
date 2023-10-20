@@ -10,18 +10,16 @@ public class Eagle : MonoBehaviour
     private Vector3 movement;
     private Animator animator;
     CameraDialogue CD;
-    DialogueManager DM;
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
         CD = GameObject.Find("Dialogue Camera").GetComponent<CameraDialogue>();
-        DM = GameObject.Find("manager").GetComponent<DialogueManager>();
     }
 
     private void Update()
     {
-        if (!DM.isInDialogue)
+        if (!DialogueManager.isInDialogue && !InventoryUI.isInventory)
         {
             ProcessInput();
             AnimateCharacter();
@@ -47,7 +45,7 @@ public class Eagle : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!DM.isInDialogue)
+        if (!DialogueManager.isInDialogue && !InventoryUI.isInventory)
             MoveCharacter();
     }
 
@@ -86,8 +84,12 @@ public class Eagle : MonoBehaviour
         if (other.CompareTag("Enemy"))
         {
             CD.enemyTransform = other.transform;
-            CharacterDialogue character = other.GetComponent<CharacterDialogue>();
+            UnitInfo character = other.GetComponent<UnitInfo>();
             dialogueManager.StartDialogue(character);
+
+            /*      */
+            UnitManager unitManager = FindObjectOfType<UnitManager>();
+            unitManager.AcquireUnit(character);
         }
     }
     

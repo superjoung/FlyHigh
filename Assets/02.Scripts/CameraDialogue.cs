@@ -8,17 +8,10 @@ public class CameraDialogue : MonoBehaviour
     public Transform enemyTransform;  // 대화하는 적의 Transform
     public float distanceFromPlayer = 15f;
 
-    DialogueManager DM;
-    // Start is called before the first frame update
-    void Start()
-    {
-        DM = GameObject.Find("manager").GetComponent<DialogueManager>();
-    }
-
     // Update is called once per frame
     void Update()
     {
-        if (DM.isInDialogue)
+        if (DialogueManager.isInDialogue)
         {
             SetDialogueCameraPosition();
         }
@@ -27,7 +20,6 @@ public class CameraDialogue : MonoBehaviour
 
     void SetDialogueCameraPosition()
     {
-        Debug.Log("test");
         Vector3 middlePoint = (playerTransform.position + enemyTransform.position) / 2;
 
         // 두 캐릭터 사이의 방향을 구합니다.
@@ -46,11 +38,5 @@ public class CameraDialogue : MonoBehaviour
         Vector3 lookAtTarget = middlePoint - Vector3.up * 2.5f;
         transform.LookAt(lookAtTarget);
     }
-
-
-
-
-
-
 
 }

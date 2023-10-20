@@ -23,7 +23,7 @@ public class DialogueManager : MonoBehaviour
     public Button nextDialogueButton;
     public Camera mainCamera;         // 주 카메라의 참조
     public Camera dialogueCamera;     // 대화 뷰를 위한 카메라의 참조
-    public bool isInDialogue = false;  // 대화 중인지 나타내는 플래그
+    public static bool isInDialogue = false;  // 대화 중인지 나타내는 플래그
     private int originalMainCameraCullingMask;  // 주 카메라의 원래 cullingMask를 저장할 변수
     public Dictionary<int, DialogueSet> characterDialogues = new Dictionary<int, DialogueSet>();
     private Dictionary<int, int> currentDialogueIndices = new Dictionary<int, int>();
@@ -74,7 +74,7 @@ public class DialogueManager : MonoBehaviour
     }
 
 
-    public void StartDialogue(CharacterDialogue character)
+    public void StartDialogue(UnitInfo character)
     {
         isInDialogue = true;
         // 마우스 커서 보이게 설정
