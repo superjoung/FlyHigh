@@ -82,6 +82,13 @@ public class mainFight : MonoBehaviour
     public int playerAttackCount = 0; // player Attack 동일 한 유닛이 공격할 때만 카운트 증가
     public int enemyAttackCount  = 0; // enemy Attack 동일 한 유닛이 공격할 때만 카운트 증가
 
+    //---------------------------------Sound value--------------------------------//
+    public AudioSource BGM_Sound;
+    public AudioSource SFX_Sound;
+    public AudioClip unitAttackSound;
+    public AudioClip playerDefeatSound;
+    public AudioClip playerWinSound;
+
     private void Start()
     {
         // 카메라 투영 방식을 2D 형식으로 변환
@@ -110,7 +117,10 @@ public class mainFight : MonoBehaviour
 
         playerUiSpawn  = GameObject.Find("PlayerUiPosition").GetComponentsInChildren<RectTransform>();
         enemyUiSpawn   = GameObject.Find("EnemyUiPosition").GetComponentsInChildren<RectTransform>();
-        
+
+        // sound source 저장
+        BGM_Sound = GameObject.Find("BGM_Manager").GetComponent<AudioSource>();
+        SFX_Sound = GameObject.Find("SFX_Manager").GetComponent<AudioSource>();
         // ID 분리, dictionary에 저장
         SpawnUnit();
     }
@@ -211,6 +221,8 @@ public class mainFight : MonoBehaviour
     void UnitAttackStart()
     {
         //--------------------전투 실시---------------------//
+        // SFX_Sound에 유닛 공격 사운드 넣기
+        SFX_Sound.clip = unitAttackSound;
         // dictionary에서 각 진형 앞열에 있는 unit의 Condition Class 가져오기
         Condition playerCondition = unitCondition[playerUnitID[playerUnitCount]];
         Condition enemyCondition = unitCondition[enemyUnitID[enemyUnitCount]];
@@ -230,7 +242,9 @@ public class mainFight : MonoBehaviour
         // 상대 AT에서 HP를 빼줌
         playerID.Heart -= enmeyID.Attack;
         enmeyID.Heart -= playerID.Attack;
-
+        
+        // 공격 사운드 넣어주기
+        SFX_Sound.Play();
         // HP Text 접근 후 값 변경
         playerUiBox.transform.GetChild(playerUnitCount).transform.Find("heart").transform.Find("HP").GetComponent<Text>().text = "" + playerID.Heart;
         enemyUiBox.transform.GetChild(enemyUnitCount).transform.Find("heart").transform.Find("HP").GetComponent<Text>().text = "" + enmeyID.Heart;
@@ -319,10 +333,16 @@ public class mainFight : MonoBehaviour
         if(playerUnitRemain == 0) // player진형 패배 두 진형 동시에 기절했을 경우 패배로 처리
         {
             enemyWinPanel.SetActive(true);
+            BGM_Sound.Stop();
+            SFX_Sound.clip = playerDefeatSound;
+            SFX_Sound.Play();
         }
         else if(enemyUnitRemain == 0) // enemy진형 패배
         {
             playerWinPanel.SetActive(true);
+            BGM_Sound.Stop();
+            SFX_Sound.clip = playerWinSound;
+            SFX_Sound.Play();
         }
     }
 
