@@ -1,6 +1,8 @@
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -122,7 +124,6 @@ public class mainFight : MonoBehaviour
         BGM_Sound = GameObject.Find("BGM_Manager").GetComponent<AudioSource>();
         SFX_Sound = GameObject.Find("SFX_Manager").GetComponent<AudioSource>();
         // ID 분리, dictionary에 저장
-        SpawnUnit();
     }
 
     private void Update()
@@ -131,6 +132,11 @@ public class mainFight : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.W))
         {
             UnitAttackStart();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            SpawnUnit();
         }
     }
 
@@ -432,6 +438,135 @@ public class mainFight : MonoBehaviour
                     Debug.Log("Ability Set true : " + currentID);
                 }
             }
+        }
+    }
+
+    // 능력이 True가 됐을 때 실행해야함. case문 실행
+    void PlayerStartAbillty(float ID)
+    {
+        GameObject currentAnimal = unitCondition[ID].animals[0];
+        switch (ID)
+        {
+            case 1:
+                currentAnimal.GetComponent<animalID>().Attack += 3;
+                currentAnimal.GetComponent<animalID>().Heart += 3;
+                break;
+
+            case 11:
+                if(unitCondition[enemyUnitID[enemyUnitCount]].isHeat[0])
+                {
+                    unitCondition[enemyUnitID[enemyUnitCount]].animals[0].GetComponent<animalID>().Heart = 0;
+                }
+                break;
+
+            case 21:
+                for(int i = 0; i < 2; i++)
+                {
+
+                    int inputNum = Random.Range(playerUnitCount, 5);
+                    inputNum = (playerUnitID[inputNum] != ID ? inputNum : (inputNum == 4 ? --inputNum : ++inputNum));
+
+                }
+                break;
+
+            case 22:
+                break;
+
+            case 31:
+                break;
+
+            case 41:
+                break;
+
+            case 42:
+                break;
+
+            case 43:
+                break;
+
+            case 51:
+                break;
+
+            case 61:
+                break;
+
+            case 71:
+                break;
+
+            case 81:
+                break;
+
+            case 82:
+                break;
+
+            case 91:
+                break;
+
+            case 92:
+                break;
+
+            case 93:
+                break;
+            default:
+                Debug.LogError("not found anything Unit");
+                break;
+        }
+    }
+
+    void EnemyStartAbillty(float ID)
+    {
+        switch (ID)
+        {
+            case 1001:
+                break;
+
+            case 1011:
+                break;
+
+            case 1021:
+                break;
+
+            case 1022:
+                break;
+
+            case 1031:
+                break;
+
+            case 1041:
+                break;
+
+            case 1042:
+                break;
+
+            case 1043:
+                break;
+
+            case 1051:
+                break;
+
+            case 1061:
+                break;
+
+            case 1071:
+                break;
+
+            case 1081:
+                break;
+
+            case 1082:
+                break;
+
+            case 1091:
+                break;
+
+            case 1092:
+                break;
+
+            case 1093:
+                break;
+            default:
+                Debug.LogError("not found anything Unit");
+                break;
         }
     }
 
