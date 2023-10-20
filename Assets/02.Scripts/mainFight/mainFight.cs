@@ -11,12 +11,14 @@ public class Condition {
     public List<bool> isHeat        = new List<bool>();
     public List<bool> isDead        = new List<bool>();
     public List<GameObject> animals = new List<GameObject>();
+    public bool canUseAility;
 
     public Condition(bool _isAbility, bool _isHeat, bool _isDead, GameObject _animal) { 
         isAbility.Add(_isAbility); // 능력이 사용 가능한 상태인지
         isHeat.Add(_isHeat); // 공격을 받았을 때
         isDead.Add(_isDead); // 죽은 상태인지
         animals.Add(_animal); // 동일한 ID의 오브젝트가 들어왔을 때
+        canUseAility = true;
     }
 
     public void Show() {
@@ -83,6 +85,8 @@ public class mainFight : MonoBehaviour
     public int enemyUseAbility   = 0; // enemy 능력 사용 카운트
     public int playerAttackCount = 0; // player Attack 동일 한 유닛이 공격할 때만 카운트 증가
     public int enemyAttackCount  = 0; // enemy Attack 동일 한 유닛이 공격할 때만 카운트 증가
+    public int playerDbuffTurn   = 0; // player can't use turn untill "playerDbuffTurn == 0"
+    public int enemyDbuffTurn    = 0; // enemy can't use turn untill "playerDbuffTurn == 0"
 
     //---------------------------------Sound value--------------------------------//
     public AudioSource BGM_Sound;
@@ -138,6 +142,29 @@ public class mainFight : MonoBehaviour
         {
             SpawnUnit();
         }
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            Debug.Log("Ability Start");
+            int a = playerUnitCount + playerUnitRemain;
+            int b = enemyUnitCount + enemyUnitRemain;
+            for (int i = playerUnitCount; i < a; i++)
+            {
+                if (unitCondition[playerUnitID[i]].isAbility[0])
+                {
+                    Debug.Log(playerUnitID[i]);
+                    PlayerStartAbillty(playerUnitID[i]);
+                }
+            }
+            for (int i = enemyUnitCount; i < b; i++)
+            {
+                if (unitCondition[enemyUnitID[i]].isAbility[0])
+                {
+                    Debug.Log(enemyUnitID[i]);
+                    EnemyStartAbillty(enemyUnitID[i]);
+                }
+            }
+        }
     }
 
     // 유닛 아이디를 받아서 저장하는 역할
@@ -150,7 +177,7 @@ public class mainFight : MonoBehaviour
             if (!(unitCondition.ContainsKey(playerUnitID[unitCount]))) // 현재 dictionary에 key값에 동일한 ID 값이 있는 지 확인 맞으면 True
             {
                 // 초기 ID 값에 의거해 현재 상태를 넣어줌
-                if (playerUnitID[unitCount] <= 10)
+                if (playerUnitID[unitCount] > 20 && playerUnitID[unitCount] <= 40)
                 {
                     // 전투 시작시 바로 능력이 사용되는 unit들 넣어주기
                     unitCondition.Add((playerUnitID[unitCount]), new Condition(true, false, false, addAnimal));
@@ -174,7 +201,7 @@ public class mainFight : MonoBehaviour
 
             if (!(unitCondition.ContainsKey(enemyUnitID[unitCount])))
             {
-                if (enemyUnitID[unitCount] <= 1010)
+                if (enemyUnitID[unitCount] > 1020 && enemyUnitID[unitCount] <= 1040)
                 {
                     unitCondition.Add((enemyUnitID[unitCount]), new Condition(true, false, false, addAnimal));
                     // unitCondition[enemyUnitID[unitCount]].Show(); // 값이 잘 들어가있는지 테스트
@@ -445,11 +472,16 @@ public class mainFight : MonoBehaviour
     void PlayerStartAbillty(float ID)
     {
         GameObject currentAnimal = unitCondition[ID].animals[0];
+        int playerEndCount = playerUnitCount + playerUnitRemain;
+        int enemyEndCount = enemyUnitCount + enemyUnitRemain;
+        int inputNum = 0;
+        int count = 0;
         switch (ID)
         {
             case 1:
                 currentAnimal.GetComponent<animalID>().Attack += 3;
                 currentAnimal.GetComponent<animalID>().Heart += 3;
+                unitCondition[ID].isAbility[0] = false;
                 break;
 
             case 11:
@@ -457,56 +489,104 @@ public class mainFight : MonoBehaviour
                 {
                     unitCondition[enemyUnitID[enemyUnitCount]].animals[0].GetComponent<animalID>().Heart = 0;
                 }
+                unitCondition[ID].isAbility[0] = false;
                 break;
 
             case 21:
                 for(int i = 0; i < 2; i++)
                 {
-
-                    int inputNum = Random.Range(playerUnitCount, 5);
-                    inputNum = (playerUnitID[inputNum] != ID ? inputNum : (inputNum == 4 ? --inputNum : ++inputNum));
-
+                    inputNum = Random.Range(playerUnitCount, playerEndCount);
+                    inputNum = (playerUnitID[inputNum] != ID ? inputNum : (inputNum == playerEndCount - 1 ? --inputNum : ++inputNum));
+                    unitCondition[playerUnitID[inputNum]].animals[0].GetComponent<animalID>().Heart += 2;
                 }
+                unitCondition[ID].isAbility[0] = false;
                 break;
 
             case 22:
+                while (true)
+                {
+                    if (unitCondition[playerUnitID[count]].animals[0] == currentAnimal)
+                        break;
+                    else ++count;
+                }
+                // 오브젝트가 처음에 있는지
+                if(count == 0)
+                {
+                    animalID temp = unitCondition[playerUnitID[count + 1]].animals[0].GetComponent<animalID>();
+                    temp.Attack += 1;
+                    temp.Heart += 1;
+                }
+                // 오브젝트가 마지막에 있는지
+                else if(count == playerEndCount)
+                {
+                    animalID temp = unitCondition[playerUnitID[count - 1]].animals[0].GetComponent<animalID>();
+                    temp.Attack += 1;
+                    temp.Heart += 1;
+                }
+                // 이상무! 양옆에 능력 부여
+                else
+                {
+                    animalID temp = unitCondition[playerUnitID[count - 1]].animals[0].GetComponent<animalID>();
+                    temp.Attack += 1;
+                    temp.Heart += 1;
+
+                    temp = unitCondition[playerUnitID[count + 1]].animals[0].GetComponent<animalID>();
+                    temp.Attack += 1;
+                    temp.Heart += 1;
+                }
+                unitCondition[ID].isAbility[0] = false;
                 break;
 
             case 31:
+                enemyDbuffTurn = 2;
+                unitCondition[ID].isAbility[0] = false;
                 break;
 
             case 41:
+                for(int i = enemyUnitCount; i < enemyEndCount; i++)
+                {
+                    unitCondition[enemyUnitID[i]].animals[0].GetComponent<animalID>().Heart -= 2;
+                }
+                unitCondition[ID].isAbility[0] = false;
                 break;
 
             case 42:
+                inputNum = Random.Range(enemyUnitCount, enemyEndCount);
+                unitCondition[enemyUnitID[inputNum]].canUseAility = false;
+                unitCondition[ID].isAbility[0] = false;
                 break;
 
             case 43:
+                for(int i = enemyUnitCount; i < enemyEndCount; i++)
+                {
+                    unitCondition[enemyUnitID[i]].animals[0].GetComponent<animalID>().Heart -= 1;
+                }
+                unitCondition[ID].isAbility[0] = false;
                 break;
 
             case 51:
+                inputNum = Random.Range(enemyUnitCount, enemyEndCount);
+                unitCondition[enemyUnitID[inputNum]].animals[0].GetComponent<animalID>().Heart -= 1;
+                unitCondition[ID].isAbility[0] = false;
                 break;
 
             case 61:
+                if (unitCondition[playerUnitID[playerUnitCount]].isHeat[0])
+                    unitCondition[playerUnitID[playerUnitCount]].animals[0].GetComponent<animalID>().Heart += 2;
+                unitCondition[ID].isAbility[0] = false;
                 break;
 
             case 71:
                 break;
 
             case 81:
+                unitCondition[enemyUnitID[enemyUnitCount]].animals[0].GetComponent<animalID>().Heart -= 5;
+                unitCondition[ID].isAbility[0] = false;
                 break;
 
             case 82:
                 break;
 
-            case 91:
-                break;
-
-            case 92:
-                break;
-
-            case 93:
-                break;
             default:
                 Debug.LogError("not found anything Unit");
                 break;
@@ -515,55 +595,121 @@ public class mainFight : MonoBehaviour
 
     void EnemyStartAbillty(float ID)
     {
-        switch (ID)
+        GameObject currentAnimal = unitCondition[ID].animals[0];
+        int playerEndCount = playerUnitCount + playerUnitRemain;
+        int enemyEndCount  = enemyUnitCount + enemyUnitRemain;
+        int inputNum = 0;
+        int count = 0;
+        switch ((int)ID)
         {
-            case 1001:
+            case 1001: 
+                currentAnimal.GetComponent<animalID>().Attack += 3;
+                currentAnimal.GetComponent<animalID>().Heart += 3;
+                unitCondition[ID].isAbility[0] = false;
                 break;
 
             case 1011:
+                if (unitCondition[playerUnitID[playerUnitCount]].isHeat[0])
+                {
+                    unitCondition[playerUnitID[playerUnitCount]].animals[0].GetComponent<animalID>().Heart = 0;
+                }
+                unitCondition[ID].isAbility[0] = false;
                 break;
-
             case 1021:
+                for (int i = 0; i < 2; i++)
+                {
+                    inputNum = Random.Range(enemyUnitCount, enemyEndCount);
+                    inputNum = (enemyUnitID[inputNum] != ID ? inputNum : (inputNum == enemyEndCount - 1 ? --inputNum : ++inputNum));
+                    unitCondition[enemyUnitID[inputNum]].animals[0].GetComponent<animalID>().Heart += 2;
+                }
+                unitCondition[ID].isAbility[0] = false;
                 break;
 
             case 1022:
+                while (true)
+                {
+                    if (unitCondition[enemyUnitID[count]].animals[0] == currentAnimal)
+                        break;
+                    else ++count;
+                }
+                // 오브젝트가 처음에 있는지
+                if (count == 0)
+                {
+                    animalID temp = unitCondition[enemyUnitID[count + 1]].animals[0].GetComponent<animalID>();
+                    temp.Attack += 1;
+                    temp.Heart += 1;
+                }
+                // 오브젝트가 마지막에 있는지
+                else if (count == enemyEndCount)
+                {
+                    animalID temp = unitCondition[enemyUnitID[count - 1]].animals[0].GetComponent<animalID>();
+                    temp.Attack += 1;
+                    temp.Heart += 1;
+                }
+                // 이상무! 양옆에 능력 부여
+                else
+                {
+                    animalID temp = unitCondition[enemyUnitID[count - 1]].animals[0].GetComponent<animalID>();
+                    temp.Attack += 1;
+                    temp.Heart += 1;
+
+                    temp = unitCondition[enemyUnitID[count + 1]].animals[0].GetComponent<animalID>();
+                    temp.Attack += 1;
+                    temp.Heart += 1;
+                }
+                unitCondition[ID].isAbility[0] = false;
                 break;
 
             case 1031:
+                playerDbuffTurn = 2;
+                unitCondition[ID].isAbility[0] = false;
                 break;
 
             case 1041:
+                for (int i = playerUnitCount; i < playerEndCount; i++)
+                {
+                    unitCondition[playerUnitID[i]].animals[0].GetComponent<animalID>().Heart -= 2;
+                }
+                unitCondition[ID].isAbility[0] = false;
                 break;
 
             case 1042:
+                inputNum = Random.Range(playerUnitCount, playerEndCount);
+                unitCondition[playerUnitID[inputNum]].canUseAility = false;
+                unitCondition[ID].isAbility[0] = false;
                 break;
 
             case 1043:
+                for (int i = playerUnitCount; i < playerEndCount; i++)
+                {
+                    unitCondition[playerUnitID[i]].animals[0].GetComponent<animalID>().Heart -= 1;
+                }
+                unitCondition[ID].isAbility[0] = false;
                 break;
 
             case 1051:
+                inputNum = Random.Range(playerUnitCount, playerEndCount);
+                unitCondition[playerUnitID[inputNum]].animals[0].GetComponent<animalID>().Heart -= 1;
+                unitCondition[ID].isAbility[0] = false;
                 break;
 
             case 1061:
+                if (unitCondition[enemyUnitID[enemyUnitCount]].isHeat[0])
+                    unitCondition[enemyUnitID[enemyUnitCount]].animals[0].GetComponent<animalID>().Heart += 2;
+                unitCondition[ID].isAbility[0] = false;
                 break;
 
             case 1071:
                 break;
 
             case 1081:
+                unitCondition[playerUnitID[playerUnitCount]].animals[0].GetComponent<animalID>().Heart -= 5;
+                unitCondition[ID].isAbility[0] = false;
                 break;
 
             case 1082:
                 break;
 
-            case 1091:
-                break;
-
-            case 1092:
-                break;
-
-            case 1093:
-                break;
             default:
                 Debug.LogError("not found anything Unit");
                 break;
