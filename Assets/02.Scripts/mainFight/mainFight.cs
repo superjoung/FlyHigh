@@ -389,7 +389,7 @@ public class mainFight : MonoBehaviour
         // player
         if(ID > 0 && ID <= 100) // 현재 공격한 unit의 능력 조건 확인 가능
         {
-            if(ID > 10 && ID <= 20)
+            if(ID > 10 && ID <= 20 && unitCondition[ID].canUseAility == true)
             {
                 unitCondition[ID].isAbility[0] = true;
                 Debug.Log("Ability Set true : " + ID);
@@ -398,40 +398,43 @@ public class mainFight : MonoBehaviour
             for (int current = 0; current < playerUnitID.Length; current++)
             {
                 float currentID = playerUnitID[current];
-                if (currentID > 0 && currentID <= 10 && playerUnitRemain == 1)
+                if (unitCondition[currentID].canUseAility == true)
                 {
-                    unitCondition[currentID].isAbility[0] = true;
-                    Debug.Log("Ability Set true : " + currentID);
-                }
-                else if (currentID > 40 && currentID <= 50 && unitCondition[ID].isDead[0] == true)
-                {
-                    if (currentID == 41 && (playerUnitCount == 2 || playerUnitCount == 4))
+                    if (currentID > 0 && currentID <= 10 && playerUnitRemain == 1)
                     {
                         unitCondition[currentID].isAbility[0] = true;
                         Debug.Log("Ability Set true : " + currentID);
                     }
-                    else if (currentID == 42 || currentID == 43)
+                    else if (currentID > 40 && currentID <= 50 && unitCondition[ID].isDead[0] == true)
+                    {
+                        if (currentID == 41 && (playerUnitCount == 2 || playerUnitCount == 4))
+                        {
+                            unitCondition[currentID].isAbility[0] = true;
+                            Debug.Log("Ability Set true : " + currentID);
+                        }
+                        else if (currentID == 42 || currentID == 43)
+                        {
+                            unitCondition[currentID].isAbility[0] = true;
+                            Debug.Log("Ability Set true : " + currentID);
+                        }
+                    }
+                    else if (currentID > 50 && currentID <= 70 && unitCondition[ID].isHeat[0] == true)
                     {
                         unitCondition[currentID].isAbility[0] = true;
                         Debug.Log("Ability Set true : " + currentID);
                     }
-                }
-                else if (currentID > 50 && currentID <= 70 && unitCondition[ID].isHeat[0] == true)
-                {
-                    unitCondition[currentID].isAbility[0] = true;
-                    Debug.Log("Ability Set true : " + currentID);
-                }
-                else if(currentID > 80 && currentID <= 90 && enemyAttackCount == 3)
-                {
-                    unitCondition[currentID].isAbility[0] = true;
-                    Debug.Log("Ability Set true : " + currentID);
+                    else if (currentID > 80 && currentID <= 90 && enemyAttackCount == 3)
+                    {
+                        unitCondition[currentID].isAbility[0] = true;
+                        Debug.Log("Ability Set true : " + currentID);
+                    }
                 }
             }
         }
         // enemy
         else if(ID > 1000 && ID <= 1100)
         {
-            if (ID > 1010 && ID <= 1020)
+            if (ID > 1010 && ID <= 1020 && unitCondition[ID].canUseAility == true)
             {
                 unitCondition[ID].isAbility[0] = true;
                 Debug.Log("Ability Set true : " + ID);
@@ -439,33 +442,36 @@ public class mainFight : MonoBehaviour
             for (int current = 0; current < enemyUnitID.Length; current++)
             {
                 float currentID = enemyUnitID[current];
-                if (currentID > 1000 && currentID <= 1010 && enemyUnitRemain == 1)
+                if (unitCondition[currentID].canUseAility == true)
                 {
-                    unitCondition[currentID].isAbility[0] = true;
-                    Debug.Log("Ability Set true : " + currentID);
-                }
-                else if (currentID > 1040 && currentID <= 1050 && unitCondition[ID].isDead[0] == true)
-                {
-                    if (currentID == 1041 && (enemyUnitCount == 2 || enemyUnitCount == 4))
+                    if (currentID > 1000 && currentID <= 1010 && enemyUnitRemain == 1)
                     {
                         unitCondition[currentID].isAbility[0] = true;
                         Debug.Log("Ability Set true : " + currentID);
                     }
-                    else if (currentID == 1042 || currentID == 1043)
+                    else if (currentID > 1040 && currentID <= 1050 && unitCondition[ID].isDead[0] == true)
+                    {
+                        if (currentID == 1041 && (enemyUnitCount == 2 || enemyUnitCount == 4))
+                        {
+                            unitCondition[currentID].isAbility[0] = true;
+                            Debug.Log("Ability Set true : " + currentID);
+                        }
+                        else if (currentID == 1042 || currentID == 1043)
+                        {
+                            unitCondition[currentID].isAbility[0] = true;
+                            Debug.Log("Ability Set true : " + currentID);
+                        }
+                    }
+                    else if (currentID > 1050 && currentID <= 1070 && unitCondition[ID].isHeat[0] == true)
                     {
                         unitCondition[currentID].isAbility[0] = true;
                         Debug.Log("Ability Set true : " + currentID);
                     }
-                }
-                else if (currentID > 1050 && currentID <= 1070 && unitCondition[ID].isHeat[0] == true)
-                {
-                    unitCondition[currentID].isAbility[0] = true;
-                    Debug.Log("Ability Set true : " + currentID);
-                }
-                else if (currentID > 1080 && currentID <= 1090 && playerAttackCount == 3)
-                {
-                    unitCondition[currentID].isAbility[0] = true;
-                    Debug.Log("Ability Set true : " + currentID);
+                    else if (currentID > 1080 && currentID <= 1090 && playerAttackCount == 3)
+                    {
+                        unitCondition[currentID].isAbility[0] = true;
+                        Debug.Log("Ability Set true : " + currentID);
+                    }
                 }
             }
         }
@@ -495,6 +501,7 @@ public class mainFight : MonoBehaviour
                 playerUiBox.transform.GetChild(CurrentNum).transform.Find("heart").transform.Find("HP").GetComponent<Text>().text = "" + currentAnimal.GetComponent<animalID>().Heart;
                 playerUiBox.transform.GetChild(CurrentNum).transform.Find("attack").transform.Find("AT").GetComponent<Text>().text = "" + currentAnimal.GetComponent<animalID>().Heart;
                 unitCondition[ID].isAbility[0] = false;
+                unitCondition[ID].canUseAility = false;
                 break;
 
             case 11:
@@ -679,6 +686,7 @@ public class mainFight : MonoBehaviour
                 enemyUiBox.transform.GetChild(CurrentNum).transform.Find("heart").transform.Find("HP").GetComponent<Text>().text = "" + currentAnimal.GetComponent<animalID>().Heart;
                 enemyUiBox.transform.GetChild(CurrentNum).transform.Find("attack").transform.Find("AT").GetComponent<Text>().text = "" + currentAnimal.GetComponent<animalID>().Attack;
                 unitCondition[ID].isAbility[0] = false;
+                unitCondition[ID].canUseAility = false;
                 break;
 
             case 1011:
@@ -933,7 +941,7 @@ public class mainFight : MonoBehaviour
                 {
                     enemyUnit[i] = enemyUnit[i + 1];
                     enemyUnitID[i] = enemyUnitID[i + 1];
-                    if (i == (enemyUnitCount + enemyUnitRemain - enemyLastArray - 1))
+                    if (i == (enemyUnitCount + enemyUnitRemain - enemyLastArray))
                     {
                         enemyUnit[i + 1] = null;
                         enemyUnitID[i + 1] = 0;
