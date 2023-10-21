@@ -472,22 +472,34 @@ public class mainFight : MonoBehaviour
     void PlayerStartAbillty(float ID)
     {
         GameObject currentAnimal = unitCondition[ID].animals[0];
-        int playerEndCount = playerUnitCount + playerUnitRemain;
-        int enemyEndCount = enemyUnitCount + enemyUnitRemain;
+        animalID temp;
+        int CurrentNum = 0;
+        int playerEndCount = playerUnitCount + playerUnitRemain; // playerUnitArray lastNum;
+        int enemyEndCount = enemyUnitCount + enemyUnitRemain; // playerUnitArray lastNum;
         int inputNum = 0;
         int count = 0;
+
+        for (int i = playerUnitCount; i < playerEndCount; i++)
+        {
+            if (playerUnitID[i] == ID) { CurrentNum = i; break; }
+        }
+
         switch (ID)
         {
             case 1:
                 currentAnimal.GetComponent<animalID>().Attack += 3;
                 currentAnimal.GetComponent<animalID>().Heart += 3;
+                playerUiBox.transform.GetChild(CurrentNum).transform.Find("heart").transform.Find("HP").GetComponent<Text>().text = "" + currentAnimal.GetComponent<animalID>().Heart;
+                playerUiBox.transform.GetChild(CurrentNum).transform.Find("attack").transform.Find("AT").GetComponent<Text>().text = "" + currentAnimal.GetComponent<animalID>().Heart;
                 unitCondition[ID].isAbility[0] = false;
                 break;
 
             case 11:
                 if(unitCondition[enemyUnitID[enemyUnitCount]].isHeat[0])
                 {
-                    unitCondition[enemyUnitID[enemyUnitCount]].animals[0].GetComponent<animalID>().Heart = 0;
+                    temp = unitCondition[enemyUnitID[enemyUnitCount]].animals[0].GetComponent<animalID>();
+                    temp.Heart = 0;
+                    enemyUiBox.transform.GetChild(enemyUnitCount).transform.Find("heart").transform.Find("HP").GetComponent<Text>().text = "" + temp.Heart;
                 }
                 unitCondition[ID].isAbility[0] = false;
                 break;
@@ -497,7 +509,9 @@ public class mainFight : MonoBehaviour
                 {
                     inputNum = Random.Range(playerUnitCount, playerEndCount);
                     inputNum = (playerUnitID[inputNum] != ID ? inputNum : (inputNum == playerEndCount - 1 ? --inputNum : ++inputNum));
-                    unitCondition[playerUnitID[inputNum]].animals[0].GetComponent<animalID>().Heart += 2;
+                    temp = unitCondition[playerUnitID[inputNum]].animals[0].GetComponent<animalID>();
+                    temp.Heart += 2;
+                    playerUiBox.transform.GetChild(inputNum).transform.Find("heart").transform.Find("HP").GetComponent<Text>().text = "" + temp.Heart;
                 }
                 unitCondition[ID].isAbility[0] = false;
                 break;
@@ -512,27 +526,35 @@ public class mainFight : MonoBehaviour
                 // 오브젝트가 처음에 있는지
                 if(count == 0)
                 {
-                    animalID temp = unitCondition[playerUnitID[count + 1]].animals[0].GetComponent<animalID>();
+                    temp = unitCondition[playerUnitID[count + 1]].animals[0].GetComponent<animalID>();
                     temp.Attack += 1;
                     temp.Heart += 1;
+                    playerUiBox.transform.GetChild(count + 1).transform.Find("heart").transform.Find("HP").GetComponent<Text>().text = "" + temp.Heart;
+                    playerUiBox.transform.GetChild(count + 1).transform.Find("attack").transform.Find("AT").GetComponent<Text>().text = "" + temp.Attack;
                 }
                 // 오브젝트가 마지막에 있는지
                 else if(count == playerEndCount)
                 {
-                    animalID temp = unitCondition[playerUnitID[count - 1]].animals[0].GetComponent<animalID>();
+                    temp = unitCondition[playerUnitID[count - 1]].animals[0].GetComponent<animalID>();
                     temp.Attack += 1;
                     temp.Heart += 1;
+                    playerUiBox.transform.GetChild(count - 1).transform.Find("heart").transform.Find("HP").GetComponent<Text>().text = "" + temp.Heart;
+                    playerUiBox.transform.GetChild(count - 1).transform.Find("attack").transform.Find("AT").GetComponent<Text>().text = "" + temp.Attack;
                 }
                 // 이상무! 양옆에 능력 부여
                 else
                 {
-                    animalID temp = unitCondition[playerUnitID[count - 1]].animals[0].GetComponent<animalID>();
+                    temp = unitCondition[playerUnitID[count - 1]].animals[0].GetComponent<animalID>();
                     temp.Attack += 1;
                     temp.Heart += 1;
+                    playerUiBox.transform.GetChild(count - 1).transform.Find("heart").transform.Find("HP").GetComponent<Text>().text = "" + temp.Heart;
+                    playerUiBox.transform.GetChild(count - 1).transform.Find("attack").transform.Find("AT").GetComponent<Text>().text = "" + temp.Attack;
 
                     temp = unitCondition[playerUnitID[count + 1]].animals[0].GetComponent<animalID>();
                     temp.Attack += 1;
                     temp.Heart += 1;
+                    playerUiBox.transform.GetChild(count + 1).transform.Find("heart").transform.Find("HP").GetComponent<Text>().text = "" + temp.Heart;
+                    playerUiBox.transform.GetChild(count + 1).transform.Find("attack").transform.Find("AT").GetComponent<Text>().text = "" + temp.Attack;
                 }
                 unitCondition[ID].isAbility[0] = false;
                 break;
@@ -545,7 +567,9 @@ public class mainFight : MonoBehaviour
             case 41:
                 for(int i = enemyUnitCount; i < enemyEndCount; i++)
                 {
-                    unitCondition[enemyUnitID[i]].animals[0].GetComponent<animalID>().Heart -= 2;
+                    temp = unitCondition[enemyUnitID[i]].animals[0].GetComponent<animalID>();
+                    temp.Heart -= 2;
+                    enemyUiBox.transform.GetChild(i).transform.Find("heart").transform.Find("HP").GetComponent<Text>().text = "" + temp.Heart;
                 }
                 unitCondition[ID].isAbility[0] = false;
                 break;
@@ -559,20 +583,28 @@ public class mainFight : MonoBehaviour
             case 43:
                 for(int i = enemyUnitCount; i < enemyEndCount; i++)
                 {
-                    unitCondition[enemyUnitID[i]].animals[0].GetComponent<animalID>().Heart -= 1;
+                    temp = unitCondition[enemyUnitID[i]].animals[0].GetComponent<animalID>();
+                    temp.Heart -= 1;
+                    enemyUiBox.transform.GetChild(i).transform.Find("heart").transform.Find("HP").GetComponent<Text>().text = "" + temp.Heart;
                 }
                 unitCondition[ID].isAbility[0] = false;
                 break;
 
             case 51:
                 inputNum = Random.Range(enemyUnitCount, enemyEndCount);
-                unitCondition[enemyUnitID[inputNum]].animals[0].GetComponent<animalID>().Heart -= 1;
+                temp = unitCondition[enemyUnitID[inputNum]].animals[0].GetComponent<animalID>();
+                temp.Heart -= 1;
+                enemyUiBox.transform.GetChild(inputNum).transform.Find("heart").transform.Find("HP").GetComponent<Text>().text = "" + temp.Heart;
                 unitCondition[ID].isAbility[0] = false;
                 break;
 
             case 61:
                 if (unitCondition[playerUnitID[playerUnitCount]].isHeat[0])
-                    unitCondition[playerUnitID[playerUnitCount]].animals[0].GetComponent<animalID>().Heart += 2;
+                {
+                    temp = unitCondition[playerUnitID[playerUnitCount]].animals[0].GetComponent<animalID>();
+                    temp.Heart += 2;
+                    playerUiBox.transform.GetChild(playerUnitCount).transform.Find("heart").transform.Find("HP").GetComponent<Text>().text = "" + temp.Heart;
+                }
                 unitCondition[ID].isAbility[0] = false;
                 break;
 
@@ -580,7 +612,9 @@ public class mainFight : MonoBehaviour
                 break;
 
             case 81:
-                unitCondition[enemyUnitID[enemyUnitCount]].animals[0].GetComponent<animalID>().Heart -= 5;
+                temp = unitCondition[enemyUnitID[enemyUnitCount]].animals[0].GetComponent<animalID>();
+                temp.Heart -= 5;
+                enemyUiBox.transform.GetChild(enemyUnitCount).transform.Find("heart").transform.Find("HP").GetComponent<Text>().text = "" + temp.Heart;
                 unitCondition[ID].isAbility[0] = false;
                 break;
 
@@ -596,22 +630,34 @@ public class mainFight : MonoBehaviour
     void EnemyStartAbillty(float ID)
     {
         GameObject currentAnimal = unitCondition[ID].animals[0];
+        animalID temp;
         int playerEndCount = playerUnitCount + playerUnitRemain;
         int enemyEndCount  = enemyUnitCount + enemyUnitRemain;
         int inputNum = 0;
         int count = 0;
+        int CurrentNum = 0;
+
+        for (int i = enemyUnitCount; i < enemyEndCount; i++)
+        {
+            if (enemyUnitID[i] == ID) { CurrentNum = i; break; }
+        }
+
         switch ((int)ID)
         {
             case 1001: 
                 currentAnimal.GetComponent<animalID>().Attack += 3;
                 currentAnimal.GetComponent<animalID>().Heart += 3;
+                enemyUiBox.transform.GetChild(CurrentNum).transform.Find("heart").transform.Find("HP").GetComponent<Text>().text = "" + currentAnimal.GetComponent<animalID>().Heart;
+                enemyUiBox.transform.GetChild(CurrentNum).transform.Find("attack").transform.Find("AT").GetComponent<Text>().text = "" + currentAnimal.GetComponent<animalID>().Attack;
                 unitCondition[ID].isAbility[0] = false;
                 break;
 
             case 1011:
                 if (unitCondition[playerUnitID[playerUnitCount]].isHeat[0])
                 {
-                    unitCondition[playerUnitID[playerUnitCount]].animals[0].GetComponent<animalID>().Heart = 0;
+                    temp = unitCondition[playerUnitID[playerUnitCount]].animals[0].GetComponent<animalID>();
+                    temp.Heart = 0;
+                    playerUiBox.transform.GetChild(playerUnitCount).transform.Find("heart").transform.Find("HP").GetComponent<Text>().text = "" + temp.Heart;
                 }
                 unitCondition[ID].isAbility[0] = false;
                 break;
@@ -620,7 +666,9 @@ public class mainFight : MonoBehaviour
                 {
                     inputNum = Random.Range(enemyUnitCount, enemyEndCount);
                     inputNum = (enemyUnitID[inputNum] != ID ? inputNum : (inputNum == enemyEndCount - 1 ? --inputNum : ++inputNum));
-                    unitCondition[enemyUnitID[inputNum]].animals[0].GetComponent<animalID>().Heart += 2;
+                    temp = unitCondition[enemyUnitID[inputNum]].animals[0].GetComponent<animalID>();
+                    temp.Heart += 2;
+                    enemyUiBox.transform.GetChild(inputNum).transform.Find("heart").transform.Find("HP").GetComponent<Text>().text = "" + currentAnimal.GetComponent<animalID>().Heart;
                 }
                 unitCondition[ID].isAbility[0] = false;
                 break;
@@ -635,27 +683,35 @@ public class mainFight : MonoBehaviour
                 // 오브젝트가 처음에 있는지
                 if (count == 0)
                 {
-                    animalID temp = unitCondition[enemyUnitID[count + 1]].animals[0].GetComponent<animalID>();
+                    temp = unitCondition[enemyUnitID[count + 1]].animals[0].GetComponent<animalID>();
                     temp.Attack += 1;
                     temp.Heart += 1;
+                    enemyUiBox.transform.GetChild(count + 1).transform.Find("heart").transform.Find("HP").GetComponent<Text>().text = "" + currentAnimal.GetComponent<animalID>().Heart;
+                    enemyUiBox.transform.GetChild(count + 1).transform.Find("attack").transform.Find("AT").GetComponent<Text>().text = "" + currentAnimal.GetComponent<animalID>().Attack;
                 }
                 // 오브젝트가 마지막에 있는지
                 else if (count == enemyEndCount)
                 {
-                    animalID temp = unitCondition[enemyUnitID[count - 1]].animals[0].GetComponent<animalID>();
+                    temp = unitCondition[enemyUnitID[count - 1]].animals[0].GetComponent<animalID>();
                     temp.Attack += 1;
                     temp.Heart += 1;
+                    enemyUiBox.transform.GetChild(count - 1).transform.Find("heart").transform.Find("HP").GetComponent<Text>().text = "" + currentAnimal.GetComponent<animalID>().Heart;
+                    enemyUiBox.transform.GetChild(count - 1).transform.Find("attack").transform.Find("AT").GetComponent<Text>().text = "" + currentAnimal.GetComponent<animalID>().Attack;
                 }
                 // 이상무! 양옆에 능력 부여
                 else
                 {
-                    animalID temp = unitCondition[enemyUnitID[count - 1]].animals[0].GetComponent<animalID>();
+                    temp = unitCondition[enemyUnitID[count - 1]].animals[0].GetComponent<animalID>();
                     temp.Attack += 1;
                     temp.Heart += 1;
+                    enemyUiBox.transform.GetChild(count - 1).transform.Find("heart").transform.Find("HP").GetComponent<Text>().text = "" + currentAnimal.GetComponent<animalID>().Heart;
+                    enemyUiBox.transform.GetChild(count - 1).transform.Find("attack").transform.Find("AT").GetComponent<Text>().text = "" + currentAnimal.GetComponent<animalID>().Attack;
 
                     temp = unitCondition[enemyUnitID[count + 1]].animals[0].GetComponent<animalID>();
                     temp.Attack += 1;
                     temp.Heart += 1;
+                    enemyUiBox.transform.GetChild(count + 1).transform.Find("heart").transform.Find("HP").GetComponent<Text>().text = "" + currentAnimal.GetComponent<animalID>().Heart;
+                    enemyUiBox.transform.GetChild(count + 1).transform.Find("attack").transform.Find("AT").GetComponent<Text>().text = "" + currentAnimal.GetComponent<animalID>().Attack;
                 }
                 unitCondition[ID].isAbility[0] = false;
                 break;
@@ -668,7 +724,9 @@ public class mainFight : MonoBehaviour
             case 1041:
                 for (int i = playerUnitCount; i < playerEndCount; i++)
                 {
-                    unitCondition[playerUnitID[i]].animals[0].GetComponent<animalID>().Heart -= 2;
+                    temp = unitCondition[playerUnitID[i]].animals[0].GetComponent<animalID>();
+                    temp.Heart -= 2;
+                    playerUiBox.transform.GetChild(i).transform.Find("heart").transform.Find("HP").GetComponent<Text>().text = "" + temp.Heart;
                 }
                 unitCondition[ID].isAbility[0] = false;
                 break;
@@ -682,20 +740,28 @@ public class mainFight : MonoBehaviour
             case 1043:
                 for (int i = playerUnitCount; i < playerEndCount; i++)
                 {
-                    unitCondition[playerUnitID[i]].animals[0].GetComponent<animalID>().Heart -= 1;
+                    temp = unitCondition[playerUnitID[i]].animals[0].GetComponent<animalID>();
+                    temp.Heart -= 1;
+                    playerUiBox.transform.GetChild(i).transform.Find("heart").transform.Find("HP").GetComponent<Text>().text = "" + temp.Heart;
                 }
                 unitCondition[ID].isAbility[0] = false;
                 break;
 
             case 1051:
                 inputNum = Random.Range(playerUnitCount, playerEndCount);
-                unitCondition[playerUnitID[inputNum]].animals[0].GetComponent<animalID>().Heart -= 1;
+                temp = unitCondition[playerUnitID[inputNum]].animals[0].GetComponent<animalID>();
+                temp.Heart -= 1;
+                playerUiBox.transform.GetChild(inputNum).transform.Find("heart").transform.Find("HP").GetComponent<Text>().text = "" + temp.Heart;
                 unitCondition[ID].isAbility[0] = false;
                 break;
 
             case 1061:
                 if (unitCondition[enemyUnitID[enemyUnitCount]].isHeat[0])
-                    unitCondition[enemyUnitID[enemyUnitCount]].animals[0].GetComponent<animalID>().Heart += 2;
+                {
+                    temp = unitCondition[enemyUnitID[enemyUnitCount]].animals[0].GetComponent<animalID>();
+                    temp.Heart += 2;
+                    enemyUiBox.transform.GetChild(enemyUnitCount).transform.Find("heart").transform.Find("HP").GetComponent<Text>().text = "" + currentAnimal.GetComponent<animalID>().Heart;
+                }
                 unitCondition[ID].isAbility[0] = false;
                 break;
 
@@ -703,7 +769,9 @@ public class mainFight : MonoBehaviour
                 break;
 
             case 1081:
-                unitCondition[playerUnitID[playerUnitCount]].animals[0].GetComponent<animalID>().Heart -= 5;
+                temp = unitCondition[playerUnitID[playerUnitCount]].animals[0].GetComponent<animalID>();
+                temp.Heart -= 5;
+                playerUiBox.transform.GetChild(playerUnitCount).transform.Find("heart").transform.Find("HP").GetComponent<Text>().text = "" + temp.Heart;
                 unitCondition[ID].isAbility[0] = false;
                 break;
 
