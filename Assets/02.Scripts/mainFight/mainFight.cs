@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 public class Condition {
     public List<bool> isAbility     = new List<bool>();
@@ -76,6 +77,8 @@ public class mainFight : MonoBehaviour
     public int enemyUnitCount  = 0; // enemy unit들이 죽었을 경우 1씩 증가한다. 지금 뭘 움직여 싸워야하는지 구분할 때 사용
     public int playerUnitRemain;
     public int enemyUnitRemain;
+    public int playerLastArray = 0;
+    public int enemyLastArray  = 0;
     public float fightSpeed; // unit끼리 싸우는 속도를 조절. 값이 낮을 수록 빨리 전투합니다.
     public GameObject playerWinPanel;
     public GameObject enemyWinPanel;
@@ -341,7 +344,6 @@ public class mainFight : MonoBehaviour
         }
 
         //--------isHeat & isDead 확인 후 능력 사용-------//
-        //------------------------------------------------//
         if (unitCondition[playerUnitID[playerUnitCount]].isDead[0] && checkNum == 0)
         {
             unitCondition[playerUnitID[playerUnitCount]].isHeat.RemoveAt(0);
@@ -357,6 +359,7 @@ public class mainFight : MonoBehaviour
             unitCondition[enemyUnitID[enemyUnitCount]].animals.RemoveAt(0);
             ++enemyUnitCount;
         }
+        //------------------------------------------------//
         EndFightCheck();
     }
 
@@ -500,6 +503,8 @@ public class mainFight : MonoBehaviour
                     temp = unitCondition[enemyUnitID[enemyUnitCount]].animals[0].GetComponent<animalID>();
                     temp.Heart = 0;
                     enemyUiBox.transform.GetChild(enemyUnitCount).transform.Find("heart").transform.Find("HP").GetComponent<Text>().text = "" + temp.Heart;
+                    unitCondition[enemyUnitID[enemyUnitCount]].isDead[0] = true;
+                    UnitArraySet(enemyUnitCount, 1);
                 }
                 unitCondition[ID].isAbility[0] = false;
                 break;
@@ -570,6 +575,12 @@ public class mainFight : MonoBehaviour
                     temp = unitCondition[enemyUnitID[i]].animals[0].GetComponent<animalID>();
                     temp.Heart -= 2;
                     enemyUiBox.transform.GetChild(i).transform.Find("heart").transform.Find("HP").GetComponent<Text>().text = "" + temp.Heart;
+
+                    if (temp.Heart <= 0)
+                    {
+                        unitCondition[enemyUnitID[i]].isDead[0] = true;
+                        UnitArraySet(i, 1);
+                    }
                 }
                 unitCondition[ID].isAbility[0] = false;
                 break;
@@ -586,6 +597,12 @@ public class mainFight : MonoBehaviour
                     temp = unitCondition[enemyUnitID[i]].animals[0].GetComponent<animalID>();
                     temp.Heart -= 1;
                     enemyUiBox.transform.GetChild(i).transform.Find("heart").transform.Find("HP").GetComponent<Text>().text = "" + temp.Heart;
+
+                    if (temp.Heart <= 0)
+                    {
+                        unitCondition[enemyUnitID[i]].isDead[0] = true;
+                        UnitArraySet(i, 1);
+                    }
                 }
                 unitCondition[ID].isAbility[0] = false;
                 break;
@@ -595,6 +612,12 @@ public class mainFight : MonoBehaviour
                 temp = unitCondition[enemyUnitID[inputNum]].animals[0].GetComponent<animalID>();
                 temp.Heart -= 1;
                 enemyUiBox.transform.GetChild(inputNum).transform.Find("heart").transform.Find("HP").GetComponent<Text>().text = "" + temp.Heart;
+
+                if (temp.Heart <= 0)
+                {
+                    unitCondition[enemyUnitID[inputNum]].isDead[0] = true;
+                    UnitArraySet(inputNum, 1);
+                }
                 unitCondition[ID].isAbility[0] = false;
                 break;
 
@@ -615,6 +638,12 @@ public class mainFight : MonoBehaviour
                 temp = unitCondition[enemyUnitID[enemyUnitCount]].animals[0].GetComponent<animalID>();
                 temp.Heart -= 5;
                 enemyUiBox.transform.GetChild(enemyUnitCount).transform.Find("heart").transform.Find("HP").GetComponent<Text>().text = "" + temp.Heart;
+
+                if (temp.Heart <= 0)
+                {
+                    unitCondition[enemyUnitID[enemyUnitCount]].isDead[0] = true;
+                    UnitArraySet(enemyUnitCount, 1);
+                }
                 unitCondition[ID].isAbility[0] = false;
                 break;
 
@@ -658,6 +687,9 @@ public class mainFight : MonoBehaviour
                     temp = unitCondition[playerUnitID[playerUnitCount]].animals[0].GetComponent<animalID>();
                     temp.Heart = 0;
                     playerUiBox.transform.GetChild(playerUnitCount).transform.Find("heart").transform.Find("HP").GetComponent<Text>().text = "" + temp.Heart;
+
+                    unitCondition[playerUnitID[playerUnitCount]].isDead[0] = true;
+                    UnitArraySet(playerUnitCount, 0);
                 }
                 unitCondition[ID].isAbility[0] = false;
                 break;
@@ -727,6 +759,12 @@ public class mainFight : MonoBehaviour
                     temp = unitCondition[playerUnitID[i]].animals[0].GetComponent<animalID>();
                     temp.Heart -= 2;
                     playerUiBox.transform.GetChild(i).transform.Find("heart").transform.Find("HP").GetComponent<Text>().text = "" + temp.Heart;
+
+                    if (temp.Heart <= 0)
+                    {
+                        unitCondition[playerUnitID[i]].isDead[0] = true;
+                        UnitArraySet(i, 0);
+                    }
                 }
                 unitCondition[ID].isAbility[0] = false;
                 break;
@@ -743,6 +781,12 @@ public class mainFight : MonoBehaviour
                     temp = unitCondition[playerUnitID[i]].animals[0].GetComponent<animalID>();
                     temp.Heart -= 1;
                     playerUiBox.transform.GetChild(i).transform.Find("heart").transform.Find("HP").GetComponent<Text>().text = "" + temp.Heart;
+
+                    if (temp.Heart <= 0)
+                    {
+                        unitCondition[playerUnitID[i]].isDead[0] = true;
+                        UnitArraySet(i, 0);
+                    }
                 }
                 unitCondition[ID].isAbility[0] = false;
                 break;
@@ -752,6 +796,12 @@ public class mainFight : MonoBehaviour
                 temp = unitCondition[playerUnitID[inputNum]].animals[0].GetComponent<animalID>();
                 temp.Heart -= 1;
                 playerUiBox.transform.GetChild(inputNum).transform.Find("heart").transform.Find("HP").GetComponent<Text>().text = "" + temp.Heart;
+
+                if (temp.Heart <= 0)
+                {
+                    unitCondition[playerUnitID[inputNum]].isDead[0] = true;
+                    UnitArraySet(inputNum, 0);
+                }
                 unitCondition[ID].isAbility[0] = false;
                 break;
 
@@ -772,6 +822,12 @@ public class mainFight : MonoBehaviour
                 temp = unitCondition[playerUnitID[playerUnitCount]].animals[0].GetComponent<animalID>();
                 temp.Heart -= 5;
                 playerUiBox.transform.GetChild(playerUnitCount).transform.Find("heart").transform.Find("HP").GetComponent<Text>().text = "" + temp.Heart;
+
+                if (temp.Heart <= 0)
+                {
+                    unitCondition[playerUnitID[playerUnitCount]].isDead[0] = true;
+                    UnitArraySet(playerUnitCount, 0);
+                }
                 unitCondition[ID].isAbility[0] = false;
                 break;
 
@@ -781,6 +837,150 @@ public class mainFight : MonoBehaviour
             default:
                 Debug.LogError("not found anything Unit");
                 break;
+        }
+    }
+
+    // 중간에 배열이 죽었을 때 array 재조정 무조건 앞을 비우고 뒤부터 채운다.
+    // 매개변수를 어떤걸로 채워야하나.. 유닛 카운트 번호로 넘기자!
+    // 죽은 유닛 카운트입니다.
+    void UnitArraySet(int unitCount, int checkNum) // checkNum 0 == player , 1 == enemy
+    {
+        Condition currentObj;
+
+        if (checkNum == 0)
+        {
+            currentObj = unitCondition[playerUnitID[unitCount]];
+            if (unitCount < playerUnitCount + playerUnitRemain - ++playerLastArray && unitCount > playerUnitCount) // playerUnitArrays 사이에 있을 경우
+            {
+                StartCoroutine(StartDieAnim(currentObj.UnitReturn(), checkNum, unitCount));
+
+                // 비어진 공간을 뒤에어부터 앞으로 채워주는 형식.
+                for(int i = (unitCount + 1); i <= playerUnitCount + playerUnitRemain; i++)
+                {
+                    unitCondition[playerUnitID[i - 1]].animals[0].transform.DOMoveX(playerSpawn[i].position.x, fightSpeed).SetEase(Ease.OutSine);
+                    playerUiBox.transform.GetChild(i - 1).GetComponent<RectTransform>().DOAnchorPosX(playerUiSpawn[i].position.x, fightSpeed).SetEase(Ease.OutSine);
+                }
+
+                for(int i =  unitCount; i < (playerUnitCount + playerUnitRemain - playerLastArray); i++)
+                {
+                    playerUnit[i] = playerUnit[i + 1];
+                    playerUnitID[i] = playerUnitID[i + 1];
+                    if (i == (playerUnitCount + playerUnitRemain - playerLastArray))
+                    {
+                        playerUnit[i + 1] = null;
+                        playerUnitID[i + 1] = 0;
+                    }
+                }
+
+                //--------isHeat & isDead 확인 후 능력 사용-------//
+                if (unitCondition[playerUnitID[unitCount]].isDead[0])
+                {
+                    currentObj.isHeat.RemoveAt(0);
+                    currentObj.isDead.RemoveAt(0);
+                    currentObj.animals.RemoveAt(0);
+                    --playerUnitRemain;
+                }
+            }
+            else if (unitCount == playerUnitCount) // 앞에 있는 유닛이 사망했을 경우
+            {
+                StartCoroutine(StartDieAnim(currentObj.UnitReturn(), checkNum, unitCount));
+
+                if (unitCondition[playerUnitID[playerUnitCount]].isDead[0])
+                {
+                    playerBox.transform.DOMoveX(playerUnitCount, fightSpeed).SetEase(Ease.OutSine);
+                    playerUiBox.GetComponent<RectTransform>().DOAnchorPosX(75 * playerUnitCount, fightSpeed).SetEase(Ease.OutSine);
+                }
+                //--------isHeat & isDead 확인 후 능력 사용-------//
+                if (unitCondition[playerUnitID[unitCount]].isDead[0])
+                {
+                    currentObj.isHeat.RemoveAt(0);
+                    currentObj.isDead.RemoveAt(0);
+                    currentObj.animals.RemoveAt(0);
+                    --playerUnitRemain;
+                    ++playerUnitCount;
+                    playerAttackCount = 0;
+                }
+            }
+            else // 맨뒤에 있는 유닛이 죽었을경우
+            {
+                StartCoroutine(StartDieAnim(currentObj.UnitReturn(), checkNum, unitCount));
+                //--------isHeat & isDead 확인 후 능력 사용-------//
+                if (unitCondition[playerUnitID[unitCount]].isDead[0])
+                {
+                    currentObj.isHeat.RemoveAt(0);
+                    currentObj.isDead.RemoveAt(0);
+                    currentObj.animals.RemoveAt(0);
+                    --playerUnitRemain;
+                }
+            }
+        }
+
+        else if(checkNum == 1)
+        {
+            currentObj = unitCondition[enemyUnitID[unitCount]];
+            if (unitCount < enemyUnitCount + enemyUnitRemain - (++enemyLastArray) && unitCount > enemyUnitCount) // playerUnitArrays 사이에 있을 경우
+            {
+                StartCoroutine(StartDieAnim(currentObj.UnitReturn(), checkNum, unitCount));
+
+                // 비어진 공간을 뒤에어부터 앞으로 채워주는 형식.
+                for (int i = (unitCount + 1); i <= enemyUnitCount + enemyUnitRemain; i++)
+                {
+                    unitCondition[enemyUnitID[i - 1]].animals[0].transform.DOMoveX(enemySpawn[i].position.x, fightSpeed).SetEase(Ease.OutSine);
+                    enemyUiBox.transform.GetChild(i - 1).GetComponent<RectTransform>().DOAnchorPosX(enemyUiSpawn[i].position.x, fightSpeed).SetEase(Ease.OutSine);
+                }
+
+                for (int i = unitCount; i < (enemyUnitCount + enemyUnitRemain - enemyLastArray); i++)
+                {
+                    enemyUnit[i] = enemyUnit[i + 1];
+                    enemyUnitID[i] = enemyUnitID[i + 1];
+                    if (i == (enemyUnitCount + enemyUnitRemain - enemyLastArray - 1))
+                    {
+                        enemyUnit[i + 1] = null;
+                        enemyUnitID[i + 1] = 0;
+                    }
+                }
+
+                //--------isHeat & isDead 확인 후 능력 사용-------//
+                if (unitCondition[enemyUnitID[unitCount]].isDead[0])
+                {
+                    currentObj.isHeat.RemoveAt(0);
+                    currentObj.isDead.RemoveAt(0);
+                    currentObj.animals.RemoveAt(0);
+                    --enemyUnitRemain;
+                }
+            }
+            else if (unitCount == enemyUnitCount) // 앞에 있는 유닛이 사망했을 경우
+            {
+                StartCoroutine(StartDieAnim(currentObj.UnitReturn(), checkNum, unitCount));
+
+                if (unitCondition[enemyUnitID[enemyUnitCount]].isDead[0])
+                {
+                    enemyBox.transform.DOMoveX(enemyUnitCount, fightSpeed).SetEase(Ease.OutSine);
+                    enemyUiBox.GetComponent<RectTransform>().DOAnchorPosX(-75 * enemyUnitCount, fightSpeed).SetEase(Ease.OutSine);
+                }
+                //--------isHeat & isDead 확인 후 능력 사용-------//
+                if (unitCondition[enemyUnitID[unitCount]].isDead[0])
+                {
+                    currentObj.isHeat.RemoveAt(0);
+                    currentObj.isDead.RemoveAt(0);
+                    currentObj.animals.RemoveAt(0);
+                    --enemyUnitRemain;
+                    ++enemyUnitCount;
+                    enemyAttackCount = 0;
+                }
+            }
+            else // 맨뒤에 있는 유닛이 죽었을경우
+            {
+                StartCoroutine(StartDieAnim(currentObj.UnitReturn(), checkNum, unitCount));
+                //--------isHeat & isDead 확인 후 능력 사용-------//
+                if (unitCondition[enemyUnitID[unitCount]].isDead[0])
+                {
+                    currentObj.isHeat.RemoveAt(0);
+                    currentObj.isDead.RemoveAt(0);
+                    currentObj.animals.RemoveAt(0);
+                    --enemyUnitRemain;
+                }
+            }
         }
     }
 
@@ -814,6 +1014,28 @@ public class mainFight : MonoBehaviour
             Destroy(animalObj);
             enemyUiBox.transform.GetChild(enemyUnitCount).gameObject.SetActive(false);
             ControllConditionGame(1);
+        }
+    }
+
+    IEnumerator StartDieAnim(GameObject animalObj, int checkNum, int unitCount) // checkNum 0 == player, 1 == enemy, 2 == playerDestroy, 3 == enemyDestroy
+    {
+        yield return new WaitForSeconds(0.01f); // 딜레이
+
+        if (checkNum == 0)
+        {
+            animalObj.GetComponent<Animator>().SetTrigger("isDead");
+            yield return new WaitForSeconds(0.01f);
+            yield return new WaitForSeconds(animalObj.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length);
+            Destroy(animalObj);
+            playerUiBox.transform.GetChild(unitCount).gameObject.SetActive(false);
+        }
+        else if (checkNum == 1)
+        {
+            animalObj.GetComponent<Animator>().SetTrigger("isDead");
+            yield return new WaitForSeconds(0.01f);
+            yield return new WaitForSeconds(animalObj.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length);
+            Destroy(animalObj);
+            enemyUiBox.transform.GetChild(unitCount).gameObject.SetActive(false);
         }
     }
 }
