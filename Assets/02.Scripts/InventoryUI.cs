@@ -10,7 +10,7 @@ public class InventoryUI : MonoBehaviour
     public Transform unit3DViewTransform; // 3D 유닛을 표시할 위치
 
     private GameObject current3DUnit; // 현재 표시되는 3D 유닛
-    private UnitManager unitManager;
+    public UnitManager unitManager;
 
     private bool isRotating = false;
     public static bool isInventory = false;

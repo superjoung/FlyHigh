@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5007475586664159665}
   - component: {fileID: 5007475586664159664}
+  - component: {fileID: 1310221690674390626}
   m_Layer: 0
   m_Name: GameManger
   m_TagString: Untagged
@@ -85,11 +86,17 @@ MonoBehaviour:
   playerUiSpawn: []
   enemyUiSpawn: []
   UnitConditionUi: {fileID: 4715315431108608593, guid: 61c59a5b92bdb6e4e8c46c372564bca3, type: 3}
+  playerBox: {fileID: 0}
+  enemyBox: {fileID: 0}
+  playerUiBox: {fileID: 0}
+  enemyUiBox: {fileID: 0}
   currentTurn: 0
   playerUnitCount: 0
   enemyUnitCount: 0
   playerUnitRemain: 0
   enemyUnitRemain: 0
+  playerLastArray: 0
+  enemyLastArray: 0
   fightSpeed: 0.2
   playerWinPanel: {fileID: 0}
   enemyWinPanel: {fileID: 0}
@@ -97,8 +104,51 @@ MonoBehaviour:
   enemyUseAbility: 0
   playerAttackCount: 0
   enemyAttackCount: 0
+  playerDbuffTurn: 0
+  enemyDbuffTurn: 0
   BGM_Sound: {fileID: 0}
   SFX_Sound: {fileID: 0}
   unitAttackSound: {fileID: 8300000, guid: d39454ca2d86f4c7e977f30de61bbe90, type: 3}
   playerDefeatSound: {fileID: 8300000, guid: c7ab6cb87fc444adbba2ce01021a5d2c, type: 3}
   playerWinSound: {fileID: 8300000, guid: 7e8487912fe1545b895a1f46e776f7c7, type: 3}
+--- !u!114 &1310221690674390626
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5007475586664159678}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7819d1eeebe849b4f99bc401a257446f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  selectUnitPanel: {fileID: 0}
+  mainCamPosition: {x: 0, y: 0, z: 0}
+  dragAnchor: {fileID: 0}
+  namheuk: {fileID: 8114597599242425475, guid: 47695987feabc4944aac42773bc519fb, type: 3}
+  inven: {fileID: 0}
+  invenP: {fileID: 0}
+  acquiredUnits:
+  - {fileID: -7898468511589342846, guid: ad654dcde6525f74bacb18a7c9b2e98f, type: 3}
+  - {fileID: -7898468511589342846, guid: ad654dcde6525f74bacb18a7c9b2e98f, type: 3}
+  - {fileID: -7898468511589342846, guid: ad654dcde6525f74bacb18a7c9b2e98f, type: 3}
+  - {fileID: -7898468511589342846, guid: ad654dcde6525f74bacb18a7c9b2e98f, type: 3}
+  - {fileID: -7898468511589342846, guid: ad654dcde6525f74bacb18a7c9b2e98f, type: 3}
+  - {fileID: -7898468511589342846, guid: ad654dcde6525f74bacb18a7c9b2e98f, type: 3}
+  - {fileID: -7898468511589342846, guid: ad654dcde6525f74bacb18a7c9b2e98f, type: 3}
+  - {fileID: -7898468511589342846, guid: ad654dcde6525f74bacb18a7c9b2e98f, type: 3}
+  - {fileID: -7898468511589342846, guid: ad654dcde6525f74bacb18a7c9b2e98f, type: 3}
+  - {fileID: -7898468511589342846, guid: ad654dcde6525f74bacb18a7c9b2e98f, type: 3}
+  - {fileID: -7898468511589342846, guid: ad654dcde6525f74bacb18a7c9b2e98f, type: 3}
+  - {fileID: -7898468511589342846, guid: ad654dcde6525f74bacb18a7c9b2e98f, type: 3}
+  - {fileID: -7898468511589342846, guid: ad654dcde6525f74bacb18a7c9b2e98f, type: 3}
+  setUnitCustom:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  setUnitBox: {fileID: 0}
+  ArrayNum: 0
+  count: 0

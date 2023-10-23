@@ -66,10 +66,10 @@ public class mainFight : MonoBehaviour
     public RectTransform[] playerUiSpawn; // player unit들의 condition을 나타내는 ui위치 저장
     public RectTransform[] enemyUiSpawn; // enemy unit들의 condition을 나타내는 ui위치 저장
     public GameObject UnitConditionUi; // AT와 HP 나타내는 Canvas UI
-    private GameObject playerBox; // player animals 부모 오브젝트
-    private GameObject enemyBox; // enemy animals 부모 오브젝트
-    private GameObject playerUiBox; // palyer ui 부모 오브젝트
-    private GameObject enemyUiBox; // enemy ui 부모 오브젝트
+    public GameObject playerBox; // player animals 부모 오브젝트
+    public GameObject enemyBox; // enemy animals 부모 오브젝트
+    public GameObject playerUiBox; // palyer ui 부모 오브젝트
+    public GameObject enemyUiBox; // enemy ui 부모 오브젝트
 
     //-------------------------Game Condition Value-------------------------------//
     public int currentTurn     = 0; // 진행한 turn 수, unit끼리 한번씩 부딪치면 1턴으로 간주한다.
@@ -82,7 +82,7 @@ public class mainFight : MonoBehaviour
     public float fightSpeed; // unit끼리 싸우는 속도를 조절. 값이 낮을 수록 빨리 전투합니다.
     public GameObject playerWinPanel;
     public GameObject enemyWinPanel;
-
+    
     //-------------------------------Ability value--------------------------------//
     public int playerUseAbility  = 0; // player 능력 사용 카운트
     public int enemyUseAbility   = 0; // enemy 능력 사용 카운트
@@ -149,8 +149,8 @@ public class mainFight : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E))
         {
             Debug.Log("Ability Start");
-            int a = playerUnitCount + playerUnitRemain;
-            int b = enemyUnitCount + enemyUnitRemain;
+            int a = playerUnitCount + playerUnitRemain - playerLastArray;
+            int b = enemyUnitCount + enemyUnitRemain - enemyLastArray;
             for (int i = playerUnitCount; i < a; i++)
             {
                 if (unitCondition[playerUnitID[i]].isAbility[0])
@@ -400,7 +400,7 @@ public class mainFight : MonoBehaviour
                 Debug.Log("Ability Set true : " + ID);
             }
             // 외부 unit들 능력 사용 필요 조건 ID 비교
-            for (int current = 0; current < playerUnitID.Length; current++)
+            for (int current = 0; current < playerUnitID.Length - playerLastArray; current++)
             {
                 float currentID = playerUnitID[current];
                 if (unitCondition[currentID].canUseAility == true)
@@ -444,7 +444,7 @@ public class mainFight : MonoBehaviour
                 unitCondition[ID].isAbility[0] = true;
                 Debug.Log("Ability Set true : " + ID);
             }
-            for (int current = 0; current < enemyUnitID.Length; current++)
+            for (int current = 0; current < enemyUnitID.Length - enemyLastArray; current++)
             {
                 float currentID = enemyUnitID[current];
                 if (unitCondition[currentID].canUseAility == true)
@@ -488,8 +488,8 @@ public class mainFight : MonoBehaviour
         GameObject currentAnimal = unitCondition[ID].animals[0];
         animalID temp;
         int CurrentNum = 0;
-        int playerEndCount = playerUnitCount + playerUnitRemain; // playerUnitArray lastNum;
-        int enemyEndCount = enemyUnitCount + enemyUnitRemain; // playerUnitArray lastNum;
+        int playerEndCount = playerUnitCount + playerUnitRemain - playerLastArray; // playerUnitArray lastNum;
+        int enemyEndCount = enemyUnitCount + enemyUnitRemain - enemyLastArray; // playerUnitArray lastNum;
         int inputNum = 0;
         int count = 0;
 
@@ -672,8 +672,8 @@ public class mainFight : MonoBehaviour
     {
         GameObject currentAnimal = unitCondition[ID].animals[0];
         animalID temp;
-        int playerEndCount = playerUnitCount + playerUnitRemain;
-        int enemyEndCount  = enemyUnitCount + enemyUnitRemain;
+        int playerEndCount = playerUnitCount + playerUnitRemain - playerLastArray;
+        int enemyEndCount  = enemyUnitCount + enemyUnitRemain - enemyLastArray;
         int inputNum = 0;
         int count = 0;
         int CurrentNum = 0;
@@ -950,22 +950,24 @@ public class mainFight : MonoBehaviour
         if (checkNum == 0)
         {
             currentObj = unitCondition[playerUnitID[unitCount]];
-            if (unitCount < (playerUnitCount + playerUnitRemain - ++playerLastArray) && unitCount > playerUnitCount) // playerUnitArrays 사이에 있을 경우
+            if (unitCount < (playerUnitRemain + playerUnitCount - 1 - playerLastArray) && unitCount > playerUnitCount) // playerUnitArrays 사이에 있을 경우
             {
+                Debug.Log("between DIE Unit");
                 StartCoroutine(StartDieAnim(currentObj.UnitReturn(), checkNum, unitCount));
 
                 // 비어진 공간을 뒤에어부터 앞으로 채워주는 형식.
-                for(int i = (unitCount + 1); i <= playerUnitCount + playerUnitRemain; i++)
+                for(int i = (unitCount + 1); i < playerUnitRemain + playerUnitCount - playerLastArray; i++)
                 {
-                    unitCondition[playerUnitID[i - 1]].animals[0].transform.DOMoveX(playerSpawn[i].position.x, fightSpeed).SetEase(Ease.OutSine);
-                    playerUiBox.transform.GetChild(i - 1).GetComponent<RectTransform>().DOAnchorPosX(playerUiSpawn[i].position.x, fightSpeed).SetEase(Ease.OutSine);
+                    Debug.Log(playerUiSpawn[i - playerUnitCount].anchoredPosition.x);
+                    unitCondition[playerUnitID[i]].animals[0].transform.DOMoveX(playerSpawn[i - playerUnitCount].position.x, fightSpeed).SetEase(Ease.OutSine);
+                    playerUiBox.transform.GetChild(i).GetComponent<RectTransform>().DOAnchorPosX(playerUiSpawn[i - playerLastArray].anchoredPosition.x, fightSpeed).SetEase(Ease.OutSine);
                 }
-
-                for(int i =  unitCount; i < (playerUnitCount + playerUnitRemain - playerLastArray); i++)
+                playerLastArray++;
+                for (int i =  unitCount; i < (playerUnitRemain + playerUnitCount - playerLastArray); i++)
                 {
                     playerUnit[i] = playerUnit[i + 1];
                     playerUnitID[i] = playerUnitID[i + 1];
-                    if (i == (playerUnitCount + playerUnitRemain - playerLastArray))
+                    if (i == (playerUnitRemain + playerUnitCount - 1 - playerLastArray))
                     {
                         playerUnit[i + 1] = null;
                         playerUnitID[i + 1] = 0;
@@ -1003,7 +1005,9 @@ public class mainFight : MonoBehaviour
             }
             else // 맨뒤에 있는 유닛이 죽었을경우
             {
-                StartCoroutine(StartDieAnim(currentObj.UnitReturn(), checkNum, unitCount));
+                Debug.Log(unitCount);
+                StartCoroutine(StartDieAnim(currentObj.UnitReturn(), checkNum, (unitCount + playerLastArray)));
+              
                 //--------isHeat & isDead 확인 후 능력 사용-------//
                 if (unitCondition[playerUnitID[unitCount]].isDead[0])
                 {
@@ -1011,26 +1015,28 @@ public class mainFight : MonoBehaviour
                     currentObj.isDead.RemoveAt(0);
                     currentObj.animals.RemoveAt(0);
                     --playerUnitRemain;
-                    ++playerLastArray;
                 }
+                playerUnit[unitCount] = null;
+                playerUnitID[unitCount] = 0;
+                ++playerLastArray;
             }
         }
 
         else if(checkNum == 1)
         {
             currentObj = unitCondition[enemyUnitID[unitCount]];
-            if (unitCount < (enemyUnitCount + enemyUnitRemain - (++enemyLastArray)) && unitCount > enemyUnitCount) // playerUnitArrays 사이에 있을 경우
+            if (unitCount < (enemyUnitCount + enemyUnitRemain - 1 - enemyLastArray) && unitCount > enemyUnitCount) // playerUnitArrays 사이에 있을 경우
             {
                 StartCoroutine(StartDieAnim(currentObj.UnitReturn(), checkNum, unitCount));
 
                 // 비어진 공간을 뒤에어부터 앞으로 채워주는 형식.
-                for (int i = (unitCount + 1); i <= enemyUnitCount + enemyUnitRemain; i++)
+                for (int i = (unitCount + 1); i <= enemyUnitCount + enemyUnitRemain - enemyLastArray; i++)
                 {
                     unitCondition[enemyUnitID[i - 1]].animals[0].transform.DOMoveX(enemySpawn[i].position.x, fightSpeed).SetEase(Ease.OutSine);
-                    enemyUiBox.transform.GetChild(i - 1).GetComponent<RectTransform>().DOAnchorPosX(enemyUiSpawn[i].position.x, fightSpeed).SetEase(Ease.OutSine);
+                    enemyUiBox.transform.GetChild(i - 1).GetComponent<RectTransform>().DOAnchorPosX(enemyUiSpawn[i - enemyLastArray].anchoredPosition.x, fightSpeed).SetEase(Ease.OutSine);
                 }
 
-                for (int i = unitCount; i < (enemyUnitCount + enemyUnitRemain - enemyLastArray); i++)
+                for (int i = unitCount; i < (enemyUnitCount + enemyUnitRemain - 1 -enemyLastArray); i++)
                 {
                     enemyUnit[i] = enemyUnit[i + 1];
                     enemyUnitID[i] = enemyUnitID[i + 1];
@@ -1049,6 +1055,7 @@ public class mainFight : MonoBehaviour
                     currentObj.animals.RemoveAt(0);
                     --enemyUnitRemain;
                 }
+                enemyLastArray++;
             }
             else if (unitCount == enemyUnitCount) // 앞에 있는 유닛이 사망했을 경우
             {
@@ -1072,7 +1079,7 @@ public class mainFight : MonoBehaviour
             }
             else // 맨뒤에 있는 유닛이 죽었을경우
             {
-                StartCoroutine(StartDieAnim(currentObj.UnitReturn(), checkNum, unitCount));
+                StartCoroutine(StartDieAnim(currentObj.UnitReturn(), checkNum, unitCount + enemyLastArray));
                 //--------isHeat & isDead 확인 후 능력 사용-------//
                 if (unitCondition[enemyUnitID[unitCount]].isDead[0])
                 {
@@ -1080,8 +1087,10 @@ public class mainFight : MonoBehaviour
                     currentObj.isDead.RemoveAt(0);
                     currentObj.animals.RemoveAt(0);
                     --enemyUnitRemain;
-                    ++enemyLastArray;
                 }
+                enemyUnit[unitCount] = null;
+                enemyUnitID[unitCount] = 0;
+                ++enemyLastArray;
             }
         }
     }
@@ -1139,5 +1148,7 @@ public class mainFight : MonoBehaviour
             Destroy(animalObj);
             enemyUiBox.transform.GetChild(unitCount).gameObject.SetActive(false);
         }
+
+        //else if(checkNum == 1)
     }
 }

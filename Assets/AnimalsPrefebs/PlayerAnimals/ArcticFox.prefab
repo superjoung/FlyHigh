@@ -509,6 +509,7 @@ GameObject:
   - component: {fileID: 5528603755101481347}
   - component: {fileID: 5528603755101481348}
   - component: {fileID: 178988500571391402}
+  - component: {fileID: -7898468511589342846}
   m_Layer: 0
   m_Name: ArcticFox
   m_TagString: Untagged
@@ -616,6 +617,23 @@ MonoBehaviour:
   Attack: 3
   Heart: 4
   UnitID: 91
+--- !u!114 &-7898468511589342846
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5528603755101481349}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10e102bb69c7d4e47b126881692d788c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  characterID: 91
+  characterNAME: ArcicFox
+  dialogueGroupIndex: 0
+  unitPrefab: {fileID: 5528603755101481349}
+  unitIcon: {fileID: 21300000, guid: 78c7d6df427967e49a5dc574ef1a5224, type: 3}
 --- !u!1 &6702221885175240864
 GameObject:
   m_ObjectHideFlags: 0
