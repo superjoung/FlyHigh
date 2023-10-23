@@ -56,24 +56,6 @@ public class DialogueManager : MonoBehaviour
                         "하늘이",
                         "마을이… 어떻게 된거지? 왜 불타고 있는 거야?",
                         "저 곰들은… 곰곰 마을의 주민들이잖아! 왜 여기 있는 거지?"}
-                },
-                new Dialogue{ dialogues = new List<string> {
-                        "곰 잔당",
-                        "마을은 불타고, 친구들이 납치되서야 나타나는 호위대장이라니..",
-                        "참새 따위가 호위대장이니 마을이 이 모양 이 꼴이지!"}
-                },
-                new Dialogue{ dialogues = new List<string> {
-                        "하늘이",
-                        "너희가 마을을 불태운 거야?",
-                        "친구들을 어디로 데려가는 거야!",
-                        "친구들을 풀어줘!"}
-                },
-                new Dialogue{ dialogues = new List<string> {
-                        "곰 잔당",
-                        "그렇게는 안되지.",
-                        "생각해보면 우리 곰들이 가장 강한데 말이야, 너희들 따위랑 친구로 지낼 필요가 없잖아?",
-                        "앞으로는 우리 곰곰 마을이 모든 마을을 지배할 것이라는 마왕곰님의 명령이 내려왔거든!",
-                        "호위대장이면서 마을 하나 지킬 힘이 없다니, 참새 따위가 뭐 그렇지, 크앙!"}
                 }
 
             }
@@ -85,8 +67,7 @@ public class DialogueManager : MonoBehaviour
             {
                 new Dialogue{ dialogues = new List<string> {
                         "하늘이",
-                        "마을이… 어떻게 된거지? 왜 불타고 있는 거야?",
-                        "저 곰들은… 곰곰 마을의 주민들이잖아! 왜 여기 있는 거지?"}
+                        "곰곰마을 주민이 여기까지 무슨일이야!"}
                 },
                 new Dialogue{ dialogues = new List<string> {
                         "곰 잔당",
@@ -96,51 +77,96 @@ public class DialogueManager : MonoBehaviour
                 new Dialogue{ dialogues = new List<string> {
                         "하늘이",
                         "너희가 마을을 불태운 거야?",
-                        "친구들을 어디로 데려가는 거야!",
-                        "친구들을 풀어줘!"}
+                        "친구들을 어디로 데려간거야!"}
                 },
                 new Dialogue{ dialogues = new List<string> {
                         "곰 잔당",
-                        "그렇게는 안되지.",
+                        "후후 우리가 납치했다!",
                         "생각해보면 우리 곰들이 가장 강한데 말이야, 너희들 따위랑 친구로 지낼 필요가 없잖아?",
                         "앞으로는 우리 곰곰 마을이 모든 마을을 지배할 것이라는 마왕곰님의 명령이 내려왔거든!",
                         "호위대장이면서 마을 하나 지킬 힘이 없다니, 참새 따위가 뭐 그렇지, 크앙!"}
+                },
+                new Dialogue{ dialogues = new List<string> {
+                        "하늘이",
+                        "어디가는거야!",
+                        "크윽 일단 남아있는 주민들 부터 찾아야겠어..."}
                 }
 
             }
         };
 
-
-
-        characterDialogues[1] = new DialogueSet
+        characterDialogues[2] = new DialogueSet
         {
             dialogueGroups = new List<Dialogue>
             {
-                new Dialogue
-                {
-                    dialogues = new List<string>
-                    {
-                        "다람쥐",
-                        "처음 뵙는군요, 1번 적입니다.",
-                        "또 만났네요!",
-                        "이젠 익숙하죠?",
-                        // 여기에 추가적인 대화를 계속 추가할 수 있습니다.
-                    }
-                },
-                new Dialogue
-                {
-                    dialogues = new List<string>
-                    {
+                new Dialogue{ dialogues = new List<string> {
                         "하늘이",
-                        "처dlldl, 1번 적입니다.",
-                        "또 만dd네요!",
-                        "이젠 dd죠?",
-                        // 여기에 추가적인 대화를 계속 추가할 수 있습니다.
-                    }
+                        "친구들은 어디있지?",
+                        "앗 구름아!"}
+                },
+                new Dialogue{ dialogues = new List<string> {
+                        "구름이",
+                        "미안해… 하늘아… 나… 아무것도 하지 못했어… ",
+                        "곰들이 너무 무서워서… "}
+                },
+                new Dialogue{ dialogues = new List<string> {
+                        "하늘이",
+                        "괜찮아 구름아. 중요한 건 앞으로 어떻게 하느냐잖아. ",
+                        "우리 먼저 남은 친구들을 찾아보자."}
+                },
+                new Dialogue{ dialogues = new List<string> {
+                        "구름이",
+                        "저기…!",
+                        "아리가 있어…!"}
+                },
+                new Dialogue{ dialogues = new List<string> {
+                        "하늘이",
+                        "아리야! 무사해서 다행이야!" }
+                }
+
+            }
+        };
+
+        characterDialogues[3] = new DialogueSet
+        {
+            dialogueGroups = new List<Dialogue>
+            {
+                new Dialogue{ dialogues = new List<string> {
+                        "하늘이",
+                        "우리 이대로 포기할 수 없잖아.",
+                        "저 곰들은 우리 마을을 침략하느라 지금 많이 다쳤을 거야.",
+                        "그래! 얼른 저 곰들 쫓아내버리러 가자!"}
+                },
+                new Dialogue{ dialogues = new List<string> {
+                        " ",
+                        "앞에 곰 가까히 가면 전투가 시작됩니다."}
                 }
             }
         };
 
+        characterDialogues[4] = new DialogueSet
+        {
+            dialogueGroups = new List<Dialogue>
+            {
+                new Dialogue{ dialogues = new List<string> {
+                        "하늘이",
+                        "헉 ! 물리쳤다!"}
+                },
+                new Dialogue{ dialogues = new List<string> {
+                        "곰 잔당",
+                        "크앙! 새들 주제에 아프잖아!",
+                        "저 녀석은 참새 주제에 크기가 왜 저렇게 큰 거야!",
+                        "크왕! 소용없는 짓이야.",
+                        "어차피 다른 마을들도 다 끝났고… 곰들이 이곳으로 더 올거야.",
+                        "너희가 할 수 있는 건 이제 없어."}
+                },
+                new Dialogue{ dialogues = new List<string> {
+                        "하늘이",
+                        "다른 마을들까지…",
+                        "다른 마을들을 구하러 가자."}
+                }
+            }
+        };
 
     }
 
@@ -183,8 +209,9 @@ public class DialogueManager : MonoBehaviour
         dialogueCounter++;  // 대화 카운터 증가
     }
 
-    public void StartDialogue(UnitInfo character)
+    public void StartDialogue(DialogueInfo character)
     {
+
         isInDialogue = true;
         // 마우스 커서 보이게 설정
         Cursor.lockState = CursorLockMode.None;
@@ -199,9 +226,10 @@ public class DialogueManager : MonoBehaviour
         dialogueCamera.enabled = true;
         mainCamera.cullingMask = originalMainCameraCullingMask;
 
-        currentCharacterID = character.characterID;
+        currentCharacterID = character.DialogueId;
         //currentDialogueGroupIndex = character.dialogueGroupIndex;
         currentDialogueGroupIndex = 0;
+        dialogueCounter = 0;
         currentDialogueIndices[currentCharacterID] = 1;  // 대화 시작시 대화 인덱스를 0으로 초기화
 
         DisplayCurrentDialogue();
@@ -249,6 +277,10 @@ public class DialogueManager : MonoBehaviour
     // 대화를 종료하는 메서드 (추후 다른 이벤트나 버튼에서 호출될 수 있음)
     public void EndDialogue()
     {
+        NavMove nm = Eagle.nowe.transform.root.gameObject.GetComponent<NavMove>();
+        SphereCollider sc = Eagle.nowe.GetComponent<SphereCollider>();
+        sc.radius = 0;
+        nm.is_move = true;
         Cursor.lockState = CursorLockMode.Locked;
         dialogueBox.SetActive(false);
         dialogueCamera.enabled = false;
@@ -256,13 +288,3 @@ public class DialogueManager : MonoBehaviour
         mainCamera.cullingMask = originalMainCameraCullingMask;
     }
 }
-
-
-
-    
-
-
-    
-
-    
-
