@@ -79,37 +79,6 @@ public class DialogueManager : MonoBehaviour
             }
         };
 
-        characterDialogues[1] = new DialogueSet
-        {
-            dialogueGroups = new List<Dialogue>
-            {
-                new Dialogue{ dialogues = new List<string> {
-                        "하늘이",
-                        "마을이… 어떻게 된거지? 왜 불타고 있는 거야?",
-                        "저 곰들은… 곰곰 마을의 주민들이잖아! 왜 여기 있는 거지?"}
-                },
-                new Dialogue{ dialogues = new List<string> {
-                        "곰 잔당",
-                        "마을은 불타고, 친구들이 납치되서야 나타나는 호위대장이라니..",
-                        "참새 따위가 호위대장이니 마을이 이 모양 이 꼴이지!"}
-                },
-                new Dialogue{ dialogues = new List<string> {
-                        "하늘이",
-                        "너희가 마을을 불태운 거야?",
-                        "친구들을 어디로 데려가는 거야!",
-                        "친구들을 풀어줘!"}
-                },
-                new Dialogue{ dialogues = new List<string> {
-                        "곰 잔당",
-                        "그렇게는 안되지.",
-                        "생각해보면 우리 곰들이 가장 강한데 말이야, 너희들 따위랑 친구로 지낼 필요가 없잖아?",
-                        "앞으로는 우리 곰곰 마을이 모든 마을을 지배할 것이라는 마왕곰님의 명령이 내려왔거든!",
-                        "호위대장이면서 마을 하나 지킬 힘이 없다니, 참새 따위가 뭐 그렇지, 크앙!"}
-                }
-
-            }
-        };
-
 
 
         characterDialogues[1] = new DialogueSet
@@ -202,6 +171,7 @@ public class DialogueManager : MonoBehaviour
         currentCharacterID = character.characterID;
         //currentDialogueGroupIndex = character.dialogueGroupIndex;
         currentDialogueGroupIndex = 0;
+        dialogueCounter = 0;
         currentDialogueIndices[currentCharacterID] = 1;  // 대화 시작시 대화 인덱스를 0으로 초기화
 
         DisplayCurrentDialogue();
@@ -256,13 +226,3 @@ public class DialogueManager : MonoBehaviour
         mainCamera.cullingMask = originalMainCameraCullingMask;
     }
 }
-
-
-
-    
-
-
-    
-
-    
-
