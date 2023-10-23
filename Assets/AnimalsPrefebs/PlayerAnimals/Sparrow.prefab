@@ -556,8 +556,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b68730cff9d4fc4581c92245c672068, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Attack: 1
-  Heart: 3
+  Attack: 4
+  Heart: 5
   UnitID: 93
 --- !u!1 &6788538757856321312
 GameObject:
