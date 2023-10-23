@@ -90,6 +90,8 @@ MonoBehaviour:
   enemyBox: {fileID: 0}
   playerUiBox: {fileID: 0}
   enemyUiBox: {fileID: 0}
+  powerUpEffect: {fileID: 162380092359320662, guid: 22c67345bcbe6ca4ab2c13d0ae417444, type: 3}
+  powerDownEffect: {fileID: 4845347227266235475, guid: 9e11c4f27cb2be94497c53076a1cbb53, type: 3}
   currentTurn: 0
   playerUnitCount: 0
   enemyUnitCount: 0
@@ -152,3 +154,4 @@ MonoBehaviour:
   setUnitBox: {fileID: 0}
   ArrayNum: 0
   count: 0
+  isFightStart: 0

@@ -33,6 +33,8 @@ public class playerUnitSet : MonoBehaviour
     public int ArrayNum = 0;
     public int count = 0;
 
+    public bool isFightStart = false;
+
     private void Awake()
     {
         /*
@@ -55,7 +57,7 @@ public class playerUnitSet : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.I))
+        if (Input.GetKeyDown(KeyCode.I) && !isFightStart)
         {
             if(selectUnitPanel.activeSelf)
                 selectUnitPanel.SetActive(false);

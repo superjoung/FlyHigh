@@ -9,10 +9,18 @@ public class uiManager : MonoBehaviour
 {
     //--------------------------Control Panel------------------------------//
     public GameObject optionPanel;
+    public GameObject SelectUnitPanel;
 
+    public player Player;
+    public playerUnitSet PlayerUnitSet;
     void Awake()
     {
         
+    }
+    private void Start()
+    {
+        Player = GameObject.Find("Player").GetComponent<player>();
+        PlayerUnitSet = GameObject.Find("GameManger").GetComponent<playerUnitSet>();
     }
 
     public void OptionButtonClick()
@@ -23,5 +31,17 @@ public class uiManager : MonoBehaviour
     {
         GameObject currentButton = EventSystem.current.currentSelectedGameObject;
         currentButton.transform.parent.gameObject.SetActive(false);
+    }
+
+    public void FightStart()
+    {
+        SelectUnitPanel.SetActive(false);
+        PlayerUnitSet.isFightStart = true;
+
+        for(int i = 0; i < PlayerUnitSet.ArrayNum; i++)
+        {
+            Player.palyerUnit[i] = GameObject.Find("UnitSetBox").transform.GetChild(i).gameObject;
+        }
+        GameObject.Find("UnitSetBox").SetActive(false);
     }
 }

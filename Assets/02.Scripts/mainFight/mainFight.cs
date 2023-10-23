@@ -5,7 +5,6 @@ using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.UIElements;
 
 public class Condition {
     public List<bool> isAbility     = new List<bool>();
@@ -70,6 +69,8 @@ public class mainFight : MonoBehaviour
     public GameObject enemyBox; // enemy animals 부모 오브젝트
     public GameObject playerUiBox; // palyer ui 부모 오브젝트
     public GameObject enemyUiBox; // enemy ui 부모 오브젝트
+    public GameObject powerUpEffect;
+    public GameObject powerDownEffect;
 
     //-------------------------Game Condition Value-------------------------------//
     public int currentTurn     = 0; // 진행한 turn 수, unit끼리 한번씩 부딪치면 1턴으로 간주한다.
@@ -98,7 +99,7 @@ public class mainFight : MonoBehaviour
     public AudioClip playerDefeatSound;
     public AudioClip playerWinSound;
 
-    private void Start()
+    private void Awake()
     {
         // 카메라 투영 방식을 2D 형식으로 변환
         Camera.main.orthographic = true;
@@ -111,9 +112,6 @@ public class mainFight : MonoBehaviour
 
         playerUiBox    = GameObject.Find("PlayerUiBox");
         enemyUiBox     = GameObject.Find("EnemyUiBox");
-
-        playerUnit     = (GameObject[])Player.palyerUnit.Clone();
-        enemyUnit      = (GameObject[])Enemy.enemyUnit.Clone();
 
         playerWinPanel = GameObject.Find("PlayerWinPanel");
         playerWinPanel.SetActive(false); // active -> false  / can't see this panel
@@ -136,37 +134,9 @@ public class mainFight : MonoBehaviour
     private void Update()
     {
         // 전투 시작
-        if (Input.GetKeyDown(KeyCode.W))
-        {
-            UnitAttackStart();
-        }
-
         if (Input.GetKeyDown(KeyCode.Q))
         {
             SpawnUnit();
-        }
-
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            Debug.Log("Ability Start");
-            int a = playerUnitCount + playerUnitRemain - playerLastArray;
-            int b = enemyUnitCount + enemyUnitRemain - enemyLastArray;
-            for (int i = playerUnitCount; i < a; i++)
-            {
-                if (unitCondition[playerUnitID[i]].isAbility[0])
-                {
-                    Debug.Log(playerUnitID[i]);
-                    PlayerStartAbillty(playerUnitID[i]);
-                }
-            }
-            for (int i = enemyUnitCount; i < b; i++)
-            {
-                if (unitCondition[enemyUnitID[i]].isAbility[0])
-                {
-                    Debug.Log(enemyUnitID[i]);
-                    EnemyStartAbillty(enemyUnitID[i]);
-                }
-            }
         }
     }
 
@@ -222,9 +192,11 @@ public class mainFight : MonoBehaviour
     }
 
     // 유닛 체력과 공격력 표시와 Unit 소환
-    void SpawnUnit() { 
+    void SpawnUnit() {
+        playerUnit = (GameObject[])Player.palyerUnit.Clone();
+        enemyUnit = (GameObject[])Enemy.enemyUnit.Clone();
         // 아군, 적 unit 중 더 길이가 긴 배열 사이즈로 소환 시작
-        for(int i = 0; i < (playerUnit.Length < enemyUnit.Length ? enemyUnit.Length : playerUnit.Length); i++)
+        for (int i = 0; i < (playerUnit.Length < enemyUnit.Length ? enemyUnit.Length : playerUnit.Length); i++)
         {
             if (playerUnit[i] != null) {
                 // prefabs를 하이레키창 오브젝트로 소환
@@ -254,6 +226,7 @@ public class mainFight : MonoBehaviour
         }
         playerLastArray = 5 - playerUnitRemain;
         enemyLastArray = 5 - enemyUnitRemain;
+        StartAbility();
     }
 
     void UnitAttackStart()
@@ -327,6 +300,7 @@ public class mainFight : MonoBehaviour
         currentTurn++;
         Debug.Log("지금 턴은 : " + currentTurn);
         //--------------------전투 종료---------------------//
+        StartCoroutine(AbilityReStart());
     }
 
     void ControllConditionGame(int checkNum) // 0 player , 1 enemy
@@ -371,16 +345,26 @@ public class mainFight : MonoBehaviour
     // 사운드 및 Panel처리
     void EndFightCheck()
     {
-        if(playerUnitRemain == 0) // player진형 패배 두 진형 동시에 기절했을 경우 패배로 처리
+        if(playerUnitRemain == 0 || (playerUnitRemain == 0 && enemyUnitRemain == 0)) // player진형 패배 두 진형 동시에 기절했을 경우 패배로 처리
         {
+            StopAllCoroutines();
             enemyWinPanel.SetActive(true);
+            GameObject defeatImageBox = GameObject.Find("DefeatImageBox");
+            defeatImageBox.transform.GetChild(0).transform.DOScale(new Vector3(1.5f, 1.5f, 1.5f), 1f).SetEase(Ease.OutBounce);
             BGM_Sound.Stop();
             SFX_Sound.clip = playerDefeatSound;
             SFX_Sound.Play();
         }
         else if(enemyUnitRemain == 0) // enemy진형 패배
         {
+            StopAllCoroutines();
             playerWinPanel.SetActive(true);
+            GameObject WinTropyhBox = GameObject.Find("WinTrophyBox");
+            int trophyCount = playerUnitRemain > playerUnitCount + playerLastArray ? 3 : playerUnitRemain == playerUnitCount + playerLastArray ? 2 : 1;
+            for(int i = 0; i < trophyCount; i++)
+            {
+                WinTropyhBox.transform.GetChild(i).GetComponent<Image>().DOColor(Color.white, 1f);
+            }
             BGM_Sound.Stop();
             SFX_Sound.clip = playerWinSound;
             SFX_Sound.Play();
@@ -481,6 +465,31 @@ public class mainFight : MonoBehaviour
             }
         }
     }
+    
+    void StartAbility()
+    {
+        Debug.Log("Ability Start");
+        int a = playerUnitCount + playerUnitRemain - playerLastArray;
+        int b = enemyUnitCount + enemyUnitRemain - enemyLastArray;
+
+        for (int i = playerUnitCount; i < 5 - playerLastArray; i++)
+        {
+            if (unitCondition[playerUnitID[i]].isAbility[0])
+            {
+                Debug.Log(playerUnitID[i]);
+                PlayerStartAbillty(playerUnitID[i]);
+            }
+        }
+        for (int i = enemyUnitCount; i < 5 - enemyLastArray; i++)
+        {
+            if (unitCondition[enemyUnitID[i]].isAbility[0])
+            {
+                Debug.Log(enemyUnitID[i]);
+                EnemyStartAbillty(enemyUnitID[i]);
+            }
+        }
+        StartCoroutine(AttackReStart());
+    }
 
     // 능력이 True가 됐을 때 실행해야함. case문 실행
     void PlayerStartAbillty(float ID)
@@ -528,6 +537,7 @@ public class mainFight : MonoBehaviour
                     inputNum = (playerUnitID[inputNum] != ID ? inputNum : (inputNum == playerEndCount - 1 ? --inputNum : ++inputNum));
                     temp = unitCondition[playerUnitID[inputNum]].animals[0].GetComponent<animalID>();
                     temp.Heart += 2;
+                    Instantiate(powerUpEffect, unitCondition[playerUnitID[inputNum]].animals[0].transform.position, Quaternion.identity, unitCondition[playerUnitID[inputNum]].animals[0].transform);
                     playerUiBox.transform.GetChild(inputNum).transform.Find("heart").transform.Find("HP").GetComponent<Text>().text = "" + temp.Heart;
                 }
                 unitCondition[ID].isAbility[0] = false;
@@ -1150,5 +1160,17 @@ public class mainFight : MonoBehaviour
         }
 
         //else if(checkNum == 1)
+    }
+
+    IEnumerator AttackReStart()
+    {
+        yield return new WaitForSeconds(1f);
+        UnitAttackStart();
+    }
+
+    IEnumerator AbilityReStart()
+    {
+        yield return new WaitForSeconds(1f);
+        StartAbility();
     }
 }
