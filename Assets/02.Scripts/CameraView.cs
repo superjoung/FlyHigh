@@ -13,6 +13,7 @@ public class CameraView : MonoBehaviour
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
+        playerTransform = GameObject.Find("Eagle").GetComponent<Transform>();
     }
 
     private void Update()

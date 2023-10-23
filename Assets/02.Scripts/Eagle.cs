@@ -10,11 +10,13 @@ public class Eagle : MonoBehaviour
     private Vector3 movement;
     private Animator animator;
     CameraDialogue CD;
+    public DialogueManager dialogueManager;  // DialogueManager에 대한 참조
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
         CD = GameObject.Find("Dialogue Camera").GetComponent<CameraDialogue>();
+        dialogueManager = GameObject.Find("manager").GetComponent<DialogueManager>();
     }
 
     private void Update()
@@ -77,7 +79,7 @@ public class Eagle : MonoBehaviour
         // "isWalk" 트리거를 수동으로 리셋해야 한다면 추가 코드가 필요합니다.
     }
 
-    public DialogueManager dialogueManager;  // DialogueManager에 대한 참조
+    
 
     private void OnTriggerEnter(Collider other)
     {
