@@ -659,7 +659,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Attack: 2
-  Heart: 3
+  Heart: 1
   UnitID: 1001
 --- !u!1 &2377433268864834307
 GameObject:
