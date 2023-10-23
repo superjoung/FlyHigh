@@ -4,5 +4,17 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/01.Scenes/01.Map/pau_duck.unity
+    guid: 44ae7bd2ae8054348b3f722997f83c7a
+  - enabled: 1
+    path: Assets/01.Scenes/01.Map/pau_duck_1.unity
+    guid: 62b8ecd2b3f904d9282717d81bc56997
+  - enabled: 1
+    path: Assets/01.Scenes/01.Map/pau_duck_burn_1.unity
+    guid: 8782b4057a8fce54082ba4627fdb1b69
+  - enabled: 1
+    path: Assets/01.Scenes/02.Fight/MainFight.unity
+    guid: 3373498e6f114c741958ca3c426f7309
   m_configObjects: {}

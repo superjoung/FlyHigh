@@ -1,10 +1,12 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(Animator))]
 public class Eagle : MonoBehaviour
 {
+    public static GameObject nowe;
     public float moveSpeed = 5f;
     private Rigidbody rb;
     private Vector3 movement;
@@ -83,15 +85,55 @@ public class Eagle : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Enemy"))
+        if (other.CompareTag("Trigger"))
         {
             CD.enemyTransform = other.transform;
-            UnitInfo character = other.GetComponent<UnitInfo>();
+            DialogueInfo character = other.GetComponent<DialogueInfo>();
             dialogueManager.StartDialogue(character);
-
+            nowe = other.gameObject;
             /*      */
-            UnitManager unitManager = FindObjectOfType<UnitManager>();
-            unitManager.AcquireUnit(character);
+            //UnitManager unitManager = FindObjectOfType<UnitManager>();
+            //UnitInfo unitInfo = other.GetComponent<UnitInfo>();
+            //unitManager.AcquireUnit(unitInfo);
+
+            if (nowe.GetComponent<UnitInfo>() != null)
+            {
+                UnitManager unitManager = FindObjectOfType<UnitManager>();
+                UnitInfo unitInfo = nowe.GetComponent<UnitInfo>();
+                unitManager.AcquireUnit(unitInfo);
+            }
+
+        
+                FightFriend ff = FindObjectOfType<FightFriend>();
+                //animalID ai = nowe.GetComponent<animalID>();
+                //ff.AcquireUnit(ai);
+
+
+
+            GameObject parentObject = nowe.transform.root.gameObject; // 현재 스크립트가 붙어 있는 게임 오브젝트의 Transform. 원하는 부모 오브젝트의 Transform으로 바꿔주시면 됩니다.
+
+            if (parentObject.transform.childCount > 0)
+            {
+                
+                Transform firstChildTransform = parentObject.transform.GetChild(0);
+                GameObject firstChildGameObject = firstChildTransform.gameObject;
+
+                if (firstChildGameObject.GetComponent<animalID>() != null)
+                {
+
+                    ff.AcquireUnit(firstChildGameObject);
+                }
+                    
+            }
+
+        }
+
+        if (other.CompareTag("Fight"))
+        {
+            nowe = other.gameObject;
+            FightEnemy fe = FindObjectOfType<FightEnemy>();
+            fe.MakeDontDestroy();
+            SceneManager.LoadScene("MainFight", LoadSceneMode.Additive);
         }
     }
     
