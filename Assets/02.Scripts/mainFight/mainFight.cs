@@ -537,7 +537,6 @@ public class mainFight : MonoBehaviour
                     inputNum = (playerUnitID[inputNum] != ID ? inputNum : (inputNum == playerEndCount - 1 ? --inputNum : ++inputNum));
                     temp = unitCondition[playerUnitID[inputNum]].animals[0].GetComponent<animalID>();
                     temp.Heart += 2;
-                    Instantiate(powerUpEffect, unitCondition[playerUnitID[inputNum]].animals[0].transform.position, Quaternion.identity, unitCondition[playerUnitID[inputNum]].animals[0].transform);
                     playerUiBox.transform.GetChild(inputNum).transform.Find("heart").transform.Find("HP").GetComponent<Text>().text = "" + temp.Heart;
                 }
                 unitCondition[ID].isAbility[0] = false;
