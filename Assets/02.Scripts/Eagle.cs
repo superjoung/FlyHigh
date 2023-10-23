@@ -95,6 +95,8 @@ public class Eagle : MonoBehaviour
             //UnitManager unitManager = FindObjectOfType<UnitManager>();
             //UnitInfo unitInfo = other.GetComponent<UnitInfo>();
             //unitManager.AcquireUnit(unitInfo);
+            SphereCollider sc = other.transform.GetComponent<SphereCollider>();
+            sc.radius = 0;
 
             if (nowe.GetComponent<UnitInfo>() != null)
             {
@@ -133,7 +135,7 @@ public class Eagle : MonoBehaviour
             nowe = other.gameObject;
             FightEnemy fe = FindObjectOfType<FightEnemy>();
             fe.MakeDontDestroy();
-            SceneManager.LoadScene("MainFight", LoadSceneMode.Additive);
+            SceneManager.LoadScene("MainFight");
         }
     }
     

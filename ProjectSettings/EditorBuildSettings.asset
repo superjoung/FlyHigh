@@ -17,4 +17,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/01.Scenes/02.Fight/MainFight.unity
     guid: 3373498e6f114c741958ca3c426f7309
+  - enabled: 1
+    path: Assets/01.Scenes/03.ETCScene/StartScene.unity
+    guid: 523d59ca2f066ef46a3093a170f308f8
   m_configObjects: {}

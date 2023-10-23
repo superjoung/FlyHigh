@@ -40,7 +40,6 @@ public class InventoryUI : MonoBehaviour
 
         if (inventoryPanel.activeInHierarchy)
         {
-
             if (Input.GetMouseButtonDown(0))
             {
                 isRotating = true;

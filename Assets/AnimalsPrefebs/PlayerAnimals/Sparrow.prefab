@@ -452,6 +452,7 @@ GameObject:
   - component: {fileID: 6788538757290762327}
   - component: {fileID: 6788538757290762320}
   - component: {fileID: 5554281320524899986}
+  - component: {fileID: 5213171751631669455}
   m_Layer: 0
   m_Name: Sparrow
   m_TagString: Untagged
@@ -559,6 +560,23 @@ MonoBehaviour:
   Attack: 4
   Heart: 5
   UnitID: 93
+--- !u!114 &5213171751631669455
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6788538757290762323}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10e102bb69c7d4e47b126881692d788c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  characterID: 0
+  characterNAME: Sparrow
+  dialogueGroupIndex: 0
+  unitPrefab: {fileID: 6788538757290762323}
+  unitIcon: {fileID: 21300000, guid: d6fc44529181cdd4e93477a9cba1ddde, type: 3}
 --- !u!1 &6788538757856321312
 GameObject:
   m_ObjectHideFlags: 0

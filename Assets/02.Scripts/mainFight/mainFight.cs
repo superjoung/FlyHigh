@@ -128,6 +128,8 @@ public class mainFight : MonoBehaviour
         // sound source 저장
         BGM_Sound = GameObject.Find("BGM_Manager").GetComponent<AudioSource>();
         SFX_Sound = GameObject.Find("SFX_Manager").GetComponent<AudioSource>();
+
+        Cursor.lockState = CursorLockMode.None;
         // ID 분리, dictionary에 저장
     }
 
@@ -194,9 +196,12 @@ public class mainFight : MonoBehaviour
     // 유닛 체력과 공격력 표시와 Unit 소환
     void SpawnUnit() {
         playerUnit = (GameObject[])Player.palyerUnit.Clone();
-        enemyUnit = (GameObject[])Enemy.enemyUnit.Clone();
+        for(int i = 0; i < Enemy.enemyUnit.Length; i++)
+        {
+            enemyUnit[i] = Enemy.enemyUnit[i];
+        }
         // 아군, 적 unit 중 더 길이가 긴 배열 사이즈로 소환 시작
-        for (int i = 0; i < (playerUnit.Length < enemyUnit.Length ? enemyUnit.Length : playerUnit.Length); i++)
+        for (int i = 0; i < 5; i++)
         {
             if (playerUnit[i] != null) {
                 // prefabs를 하이레키창 오브젝트로 소환

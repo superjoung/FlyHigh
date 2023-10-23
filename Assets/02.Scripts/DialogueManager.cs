@@ -121,13 +121,35 @@ public class DialogueManager : MonoBehaviour
                 },
                 new Dialogue{ dialogues = new List<string> {
                         "하늘이",
-                        "아리야! 무사해서 다행이야!" }
+                        "((구름이가 동료가 되었습니다.))" }
                 }
 
             }
         };
 
         characterDialogues[3] = new DialogueSet
+        {
+            dialogueGroups = new List<Dialogue>
+            {
+                new Dialogue{ dialogues = new List<string> {
+                        "하늘이",
+                        "아리야! 무사해서 다행이야!" }
+                },
+                new Dialogue{ dialogues = new List<string> {
+                        "아리",
+                        "저 앞에 곰 잔당들이 있어! 조심해"}
+                },
+                new Dialogue{ dialogues = new List<string> {
+                        "구름이",
+                        "알겠어!",
+                        "((아리가 동료가 되었습니다))"}
+                },
+
+
+            }
+        };
+
+        characterDialogues[4] = new DialogueSet
         {
             dialogueGroups = new List<Dialogue>
             {
@@ -144,7 +166,7 @@ public class DialogueManager : MonoBehaviour
             }
         };
 
-        characterDialogues[4] = new DialogueSet
+        characterDialogues[5] = new DialogueSet
         {
             dialogueGroups = new List<Dialogue>
             {
@@ -167,7 +189,6 @@ public class DialogueManager : MonoBehaviour
                 }
             }
         };
-
     }
 
     private Coroutine typingCoroutine;
