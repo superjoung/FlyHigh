@@ -82,8 +82,7 @@ public class DialogueTutorial : MonoBehaviour
                 new Dialogue{ dialogues = new List<string> {
                         "아리 (부엉이)",
                         "그러려면 먼저 밥부터 먹어야할 걸?",
-                        "늦게오면 한 톨도 없어~~",
-                        "(아리가 먼저 간다)"}
+                        "늦게오면 한 톨도 없어~~"}
                 },
                 new Dialogue{ dialogues = new List<string> {
                         " ",

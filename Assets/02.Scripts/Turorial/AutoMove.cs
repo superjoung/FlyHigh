@@ -21,6 +21,7 @@ public class AutoMove : MonoBehaviour
         is_move2 = false;
         is_move3 = false;
         animator = GetComponent<Animator>();
+        agent.speed = 20;
     }
 
     private void Update()
@@ -40,6 +41,7 @@ public class AutoMove : MonoBehaviour
     {
         if (waypoints.Length == 0) // 경로 지점이 설정되어 있지 않다면
             return;
+
 
         agent.destination = waypoints[currentWaypointIndex].position; // 현재 목표 경로 지점으로 설정
         currentWaypointIndex = (currentWaypointIndex + 1) % waypoints.Length; // 다음 경로 지점의 인덱스로 변경

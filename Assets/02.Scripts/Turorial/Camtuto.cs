@@ -116,7 +116,7 @@ public class Camtuto : MonoBehaviour
 
         fadePanel.color = new Color(fadePanel.color.r, fadePanel.color.g, fadePanel.color.b, 1); // 화면을 완전히 어둡게 합니다.
 
-        SceneManager.LoadScene("pau_duck_1"); // 다음 씬으로 전환
+        SceneManager.LoadScene("StartScene"); // 다음 씬으로 전환
     }
 
 }
