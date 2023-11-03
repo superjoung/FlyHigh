@@ -420,7 +420,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10e102bb69c7d4e47b126881692d788c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterID: 0
+  characterID: 99
   characterNAME: Owl
   dialogueGroupIndex: 0
   unitPrefab: {fileID: 4073363319975690503}

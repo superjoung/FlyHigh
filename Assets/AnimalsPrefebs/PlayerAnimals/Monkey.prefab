@@ -364,6 +364,7 @@ GameObject:
   - component: {fileID: 8670454184925558626}
   - component: {fileID: 8670454184925558625}
   - component: {fileID: 1276515765492095484}
+  - component: {fileID: 2567357728162381548}
   m_Layer: 0
   m_Name: Monkey
   m_TagString: Untagged
@@ -471,6 +472,23 @@ MonoBehaviour:
   Attack: 3
   Heart: 4
   UnitID: 21
+--- !u!114 &2567357728162381548
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8670454184925558629}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10e102bb69c7d4e47b126881692d788c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  characterID: 21
+  characterNAME: Monkey
+  dialogueGroupIndex: 0
+  unitPrefab: {fileID: 8670454184925558629}
+  unitIcon: {fileID: 21300000, guid: 22217e24ab2b46f4eaa2f2ccfecfeb1c, type: 3}
 --- !u!1 &8670454185164880722
 GameObject:
   m_ObjectHideFlags: 0

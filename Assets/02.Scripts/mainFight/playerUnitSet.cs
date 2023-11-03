@@ -31,7 +31,7 @@ public class playerUnitSet : MonoBehaviour
     public List<UnitInfo> acquiredUnits = new List<UnitInfo>();
     public GameObject[] setUnitCustom = new GameObject[5];
     public GameObject setUnitBox;
-    public FightFriend fightFriend;
+    //public FightFriend fightFriend;
     public int ArrayNum = 0;
     public int count = 0;
 
@@ -48,15 +48,16 @@ public class playerUnitSet : MonoBehaviour
         selectUnitPanel = GameObject.Find("SelectUnitPanel");
         setUnitBox = GameObject.Find("UnitSetBox");
         namheuk = GameObject.Find("Test");
-        fightFriend = GameObject.Find("FightFriend").GetComponent<FightFriend>();
+        //fightFriend = GameObject.Find("FightFriend").GetComponent<FightFriend>();
     }
 
     private void Start()
     {
+        /*
         for(int i = 0; i < fightFriend.playerUnit.Count; i++)
         {
             acquiredUnits.Add(fightFriend.playerUnit[i].GetComponent<UnitInfo>());
-        }
+        }*/
         selectUnitPanel.SetActive(false);
         mainCamPosition = Camera.main.transform.position;
         InputInventory();

@@ -108,6 +108,7 @@ GameObject:
   - component: {fileID: 1033167635263110918}
   - component: {fileID: 1033167635263110915}
   - component: {fileID: 3312927618667911014}
+  - component: {fileID: 7741622466308285994}
   m_Layer: 0
   m_Name: Crow
   m_TagString: Untagged
@@ -215,6 +216,23 @@ MonoBehaviour:
   Attack: 2
   Heart: 3
   UnitID: 22
+--- !u!114 &7741622466308285994
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1033167635263110919}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10e102bb69c7d4e47b126881692d788c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  characterID: 22
+  characterNAME: Crow
+  dialogueGroupIndex: 0
+  unitPrefab: {fileID: 1033167635263110919}
+  unitIcon: {fileID: 21300000, guid: 45a46953f9fd245469a84fdb5f54e480, type: 3}
 --- !u!1 &1033167637051147051
 GameObject:
   m_ObjectHideFlags: 0
